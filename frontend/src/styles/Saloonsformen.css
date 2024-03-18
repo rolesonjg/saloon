@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Petrona:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* 
+.displayofthefiltereditems {
+  height: 210px; 
+  margin: 0px;
+  padding:0px; 
+  }
+  .dflexthing{
+      height: 40px;
+  }
+  @media(min-width:1200px)and (max-width: 1400px) {
+      .displayofthefiltereditems {
+        background-color: lightblue;
+      }
+    }
+    @media(min-width:770px)and (max-width: 1200px) {
+      .displayofthefiltereditems {
+          width: 800px;
+      }
+    }
+    @media(max-width:770px) {
+      .displayofthefiltereditems {
+       height: 450px;
+       margin:20px;
+     
+      }
+  
+              
+    }
+    @media(max-width:500px) {
+      .displayofthefiltereditems {
+       height: 500px;
+       margin:20px;
+  min-width: 200px;
+      }
+  
+      .dflexthing{
+          display: grid;
+          background-color: red;
+          height: 100px;
+          text-align: center;
+       
+      }} */
+
+      /* XTRA Small devices (<576px) */
+
+     
+      .smallcontainerwrap{
+        max-width: 650px;
+      }
+      .itemdotheheading{
+        text-align: center;
+      }
+      .contitemdotthelogo{
+        display: flex;
+        justify-content: center;
+      }
+      /* .itemdotthelogo{
+        
+      }
+      .colitemdotlocation{
+       
+      } */
+/* Small devices (≥576px) */
+@media (min-width: 576px) {
+  .itemdotheheading{
+    text-align: center;
+  }
+  .contitemdotthelogo{
+    display: flex;
+    justify-content: center;
+  }
+ 
+  /* CSS rules for small devices */
+}
+
+/* Medium devices (≥768px) */
+@media (min-width: 768px) {
+  
+  .itemdotheheading{
+    text-align: center;
+  }
+  .contitemdotthelogo{
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* .itemdotthelogo{
+    
+  } */
+  /* CSS rules for medium devices */
+}
+
+/* Large devices (≥992px) */
+@media (min-width: 992px) {
+  .itemdotheheading{
+    text-align: start;
+  }
+
+  /* CSS rules for large devices */
+}
+
+/* Extra large devices (≥1200px) */
+@media (min-width: 1200px) {
+  /* CSS rules for extra large devices */
+  .colcontaineroftheinnerdisp{
+    padding: 0px;
+
+
+  }
+  
+  .smallcontainerwrap{
+  
+    max-width: 550px;
+  }
+}
+
+/* Extra extra large devices (≥1400px) */
+@media (min-width: 1400px) {
+  /* CSS rules for extra extra large devices */
+  .smallcontainerwrap{
+    max-width: 650px;
+  }
+}

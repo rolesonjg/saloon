@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Petrona:ital,wght@0,100..900;1,100..900&display=swap');
+.containeroftheHomepage{
+    /* background-image: url('../../assets/saloonbackground.png'); */
+    background-position: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    background-image: linear-gradient(to right,rgba(10, 21, 25, 1),rgba(255, 255, 255, 0)), url('../assets/saloonbackground.png');}
+/* 
+rgba(10, 21, 25, 1)
+rgba(217, 217, 217, 0) */
+.buttonofthehoempage:hover{
+    background-color:rgb(245, 227, 214);
+    transition: 200ms;
+}
+.buttonofthehoempage{
+    background-color: white;
+
+}
