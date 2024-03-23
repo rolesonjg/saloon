@@ -15,6 +15,7 @@ import Saloonsforwomen from "./Saloonsforwomen";
 import Selectstylishwomen from "./Selectstylishwomen";
 import Serviceforwomen from "./Serviceforwomen";
 import Mobilenumber from "./Test/TESTINGimaGES/bilsy";
+import Reviewssection from "./Reviewssection";
 
 function App() {
   return (
@@ -34,13 +35,13 @@ function App() {
           <Route path="/test" element={<Test />}></Route>
           <Route path="/test2" element={<Test2 />}></Route>
           <Route path="/test3" element={<Test3 />}></Route>
-
           <Route path="/saloonsforwomen" element={<Saloonsforwomen />}></Route>
           <Route path="/serviceforwomen" element={<Serviceforwomen />}></Route>
           <Route
             path="/selectstylishwomen"
             element={<Selectstylishwomen />}
           ></Route>
+          <Route path="/reviewssection" element={<Reviewssection />}></Route>
           <Route path="/mobilenumber" element={<Mobilenumber />}></Route>
         </Routes>
       </Router>

@@ -8,10 +8,9 @@ import axios from "axios";
 const Mobile = () => {
   const location = useLocation();
   const confirmappointmentdetails = location.state.confirmappointmentdetails;
-  // console.log("location.state", confirmappointmentdetails);
-  // useEffect(()=>{
-
-  // },[]);
+  useEffect(() => {
+    console.log("location.state", confirmappointmentdetails);
+  }, []);
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
@@ -74,17 +73,33 @@ const Mobile = () => {
         console.log("response", response);
 
         if (response.data.message.length > 0) {
-          navigate("/validateotp", {
-            state: {
-              confirmappointmentdetails: confirmappointmentdetails,
-              userdetails: {
-                name: nameValue,
-                gender: selectedValue,
-                email: emailValue,
-                phonenumber: inputValue,
+          if (location.state !== null) {
+            // Do something with location.state
+            navigate("/validateotp", {
+              state: {
+                confirmappointmentdetails: confirmappointmentdetails,
+                userdetails: {
+                  name: nameValue,
+                  gender: selectedValue,
+                  email: emailValue,
+                  phonenumber: inputValue,
+                },
               },
-            },
-          });
+            });
+          } else {
+            // Handle the case where location.state is null
+            alert("location.state is null");
+            // navigate("/validateotp", {
+            //   state: {
+            //     userdetails: {
+            //       name: nameValue,
+            //       gender: selectedValue,
+            //       email: emailValue,
+            //       phonenumber: inputValue,
+            //     },
+            //   },
+            // });
+          }
         } else {
           console.log("Error occurred:", response.data.message);
         }

@@ -13,6 +13,7 @@ router.post('/generateotp', async (req, res) => {
     const { phoneNumber,email} = req.body;
     const otp = otpGenerator.generate(6, { digits: true, specialChars: false,lowerCaseAlphabets: false ,upperCaseAlphabets: false   });
     optStoragetemparay=otp;
+    console.log("ACUTUAL OTP",otp)
     // console.log("optStoragetemparay",optStoragetemparay)
     // const vonage = new Vonage({
     //     apiKey: "6623f9be",
@@ -51,7 +52,8 @@ router.post('/generateotp', async (req, res) => {
               console.log('Email sent: ' + info.response);
               res.status(200).send('Email sent successfully.');
             }      
-    })
+       });
+
     const getoptuseremail = await optmodel.find({
         email: email,
     });
@@ -65,8 +67,7 @@ router.post('/generateotp', async (req, res) => {
             otp: otp,
             email: email,
             phonenumber: parseInt(phoneNumber)
-        });
-        
+        });       
         newusertempotp.save()
             .then(savedUser => {
                 console.log('User with OTP saved successfully:', savedUser);

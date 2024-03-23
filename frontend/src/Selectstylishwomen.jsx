@@ -48,7 +48,6 @@ const Selectstylishwomen = () => {
   const x = location.state.selectedService;
   const headingpassedfromsaloon = location.state.headingpassedfromsaloon;
   const [currentstylish, setcurrentstylish] = useState();
-
   const [alldetailstoappoint, setalldatetoappoint] = useState({
     selectedbuttons: {},
     selectedservice: {},
@@ -63,19 +62,20 @@ const Selectstylishwomen = () => {
   });
 
   useEffect(() => {
-    console.log("alldetailstoappoint", alldetailstoappoint);
+    // console.log("alldetailstoappoint", alldetailstoappoint);
     if (uniqueINDEXARR.length === 0) {
       alert("select the timing");
     } else {
-      navigate("/mobile", {
-        state: {
-          confirmappointmentdetails: alldetailstoappoint,
-        },
-      });
+      // navigate("/mobile", {
+      //   state: {
+      //     confirmappointmentdetails: alldetailstoappoint,
+      //   },
+      // });
+      // console.log("___________");
     }
   }, [alldetailstoappoint]);
 
-  console.log("headingpassedfromsaloon", headingpassedfromsaloon);
+  // console.log("headingpassedfromsaloon", headingpassedfromsaloon);
   const [selectedServiceUseLocation, setselectedServiceUseLocation] =
     useState(x);
   const [totalItems, setTotalItems] = useState(0);
@@ -109,12 +109,12 @@ const Selectstylishwomen = () => {
       navigate("/serviceforwomen", {});
     }
     // console.log("totalTime", totalTime);
-    console.log("selectedServiceUseLocation", selectedServiceUseLocation);
+    // console.log("selectedServiceUseLocation", selectedServiceUseLocation);
   }, [selectedServiceUseLocation]);
 
   const [autobuttonclick, setautobuttonclick] = useState([]);
   useEffect(() => {
-    console.log("totalTime", totalTime);
+    // console.log("totalTime", totalTime);
     let minutesValue = parseInt(totalTime);
     let hoursValue = Math.floor(minutesValue / 60);
     let remainingMinutesValue = minutesValue % 60;
@@ -126,7 +126,7 @@ const Selectstylishwomen = () => {
     }
 
     const temp = Math.round(totalTime / 30) + 1;
-    console.log("ITEMS that need tO be cliCked", temp);
+    // console.log("ITEMS that need tO be cliCked", temp);
 
     setautobuttonclick(temp);
   }, [totalTime]);
@@ -148,11 +148,6 @@ const Selectstylishwomen = () => {
   const [uniqueINDEX, setuniqueINDEX] = useState("");
   const [selectedID, setSelectedId] = useState();
 
-  const selectedbuttondataTOpass =  {
-    IDoftheitem: itemidentifer,
-    date: fullDate,
-    selectedbuttons: uniqueINDEXARR,
-  }
   const [fullDate, setfullDate] = useState({
     days: date.getDate(),
     months: date.getMonth(),
@@ -202,7 +197,11 @@ const Selectstylishwomen = () => {
       // PostbuttonDATA();
 
       setalldatetoappoint({
-        selectedbuttons: uniqueINDEXARR,
+        selectedbuttonsdetails: {
+          IDoftheitem: itemidentifer,
+          date: fullDate,
+          selectedbuttons: uniqueINDEXARR,
+        },
         selectedservice: selectedServiceUseLocation,
         salonname: headingpassedfromsaloon,
         stylishname: currentstylish,
@@ -223,13 +222,19 @@ const Selectstylishwomen = () => {
         totaltime: totalTime,
         totalamount: totalAmount,
       });
-      // console.log(alldetailstoappoint, "alldetailstoappoint");
-      // alert("GOING to mobile");
-      // navigate("/mobile", {
-      //   state: {
-      //     confirmappointmentdetails: alldetailstoappoint,
-      //   },
-      // });
+      alert("GOING to mobile");
+
+      if (alldetailstoappoint.dateofappointment.length > 0) {
+        // console.log("alldetailstoappoint cccc", alldetailstoappoint);
+
+        navigate("/mobile", {
+          state: {
+            confirmappointmentdetails: alldetailstoappoint,
+          },
+        });
+      }
+
+      // console.log("ALLAPPOINTMENTS DETAILS", alldetailstoappoint);
       // PostbuttonDATAget();
     } else {
       alert("Select any appointments to confirm");
@@ -244,7 +249,7 @@ const Selectstylishwomen = () => {
   }, [selectedID]);
 
   useEffect(() => {
-    console.log("alreadybooked", alreadybooked);
+    // console.log("alreadybooked", alreadybooked);
   }, [alreadybooked]);
 
   const refreshwhentimechange = async () => {
@@ -261,9 +266,9 @@ const Selectstylishwomen = () => {
       {}
     );
 
-    console.log("IT is kind of working", response2);
+    // console.log("IT is kind of working", response2);
     if (response2.data.QUeried.length === 0) {
-      console.log("    response2.data.QUeried========0");
+      // console.log("    response2.data.QUeried========0");
       setalreadybooked([55]);
 
       // alert(
@@ -287,7 +292,7 @@ const Selectstylishwomen = () => {
   }, [selectedidofthefilter]);
 
   const handleSelect = (e, itemId, indexx, ITEM) => {
-    console.log("ITEM OF the seleccted pro ", ITEM);
+    // console.log("ITEM OF the seleccted pro ", ITEM);
     setcurrentstylish(ITEM.heading);
     if (uniqueINDEXARR.length > 0) {
       // alert("wait what");
@@ -312,7 +317,7 @@ const Selectstylishwomen = () => {
 
       // console.log("response", response2.data);
       // setalreadybooked(response2.data.QUeried[0].selectedbuttons);
-      console.log("RESPONSE 2", response2);
+      // console.log("RESPONSE 2", response2);
       if (response2.data.QUeried.length === 0) {
         // console.log("hello", response2.data.QUeried);
         setalreadybooked([...alreadybooked, 55]);
@@ -353,7 +358,7 @@ const Selectstylishwomen = () => {
     setexpand((prevState) => {
       const newState = {};
       // Set all values to false
-      console.log("expand", expand);
+      // console.log("expand", expand);
       expand.length > 0 &&
         expand.keys(prevState).forEach((key) => {
           newState[key] = false;
@@ -369,7 +374,7 @@ const Selectstylishwomen = () => {
       const response = await axios.get(
         "http://127.0.0.1:5000/selectstylishmenroute/images"
       );
-      console.log("RES FROM BACKEND", response.data.saloonformen);
+      // console.log("RES FROM BACKEND", response.data.saloonformen);
       setData(response.data.saloonformen);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -387,7 +392,7 @@ const Selectstylishwomen = () => {
         },
         {}
       );
-      console.log("succesfully getted from post", response);
+      // console.log("succesfully getted from post", response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -404,7 +409,7 @@ const Selectstylishwomen = () => {
         },
         {}
       );
-      console.log("SUCESSFULLY POSTED DATA CONFIRM", response);
+      // console.log("SUCESSFULLY POSTED DATA CONFIRM", response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -421,7 +426,7 @@ const Selectstylishwomen = () => {
         },
         {}
       );
-      console.log("SUCESSFULLY POSTED DATA CONFIRM", response);
+      // console.log("SUCESSFULLY POSTED DATA CONFIRM", response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -443,7 +448,7 @@ const Selectstylishwomen = () => {
   const handleclosebuttonclickonservice = (itempromax, index) => {
     const filtered = selectedServiceUseLocation.filter((item) => {
       if (itempromax._id === item._id) {
-        console.log("going to be removed", item._id);
+        // console.log("going to be removed", item._id);
       }
       return itempromax._id !== item._id;
     });
@@ -457,7 +462,7 @@ const Selectstylishwomen = () => {
   DATES;
   useEffect(() => {
     // console.log("dateeeee", date);
-    console.log("DATES", DATES);
+    // console.log("DATES", DATES);
   }, [date, DATES]);
 
   useEffect(() => {
@@ -483,7 +488,7 @@ const Selectstylishwomen = () => {
 
   const handletimechange = (item) => {
     // Logic to handle time change
-    console.log("Time changeeed", item);
+    // console.log("Time changeeed", item);
   };
 
   const handleTodaybuttonClick = () => {
@@ -534,7 +539,7 @@ const Selectstylishwomen = () => {
   const [uniqueINDEXARR, setuniqueINDEXARR] = useState([]);
 
   useEffect(() => {
-    console.log("uniqueINDEXARR", uniqueINDEXARR);
+    // console.log("uniqueINDEXARR", uniqueINDEXARR);
   }, [uniqueINDEXARR]);
 
   const [togglebacktounselect, settogglebacktounselect] = useState();
@@ -543,7 +548,7 @@ const Selectstylishwomen = () => {
     // console.log("ITEM >ID", item._id);
     // setitemidentifer(ITEM._id);
     if (uniqueINDEXARR.includes(index)) {
-      console.log("YES BRO it is already colored");
+      // console.log("YES BRO it is already colored");
       setuniqueINDEXARR([]);
       return;
     }
@@ -563,15 +568,15 @@ const Selectstylishwomen = () => {
 
         for (let i = index; i < b; i++) {
           if (alreadybooked.includes(i)) {
-            console.log("I will Not push you today bro", i);
+            // console.log("I will Not push you today bro", i);
             newArray = [];
             break;
           } else {
             newArray.push(i);
           }
-          console.log("PUSHED aRRAy", newArray);
+          // console.log("PUSHED aRRAy", newArray);
         }
-        console.log("Math.max(...newArray)", Math.max(...newArray));
+        // console.log("Math.max(...newArray)", Math.max(...newArray));
         if (Math.max(...newArray) > 24) {
           alert("select a proper time");
           return [];
@@ -841,7 +846,7 @@ const Selectstylishwomen = () => {
                                         onChange={(value, event) => {
                                           // setDate(value);
                                           // SETDATES(value),
-                                          console.log("ITEM>id", item._id);
+                                          // console.log("ITEM>id", item._id);
                                           // console.log(
                                           //   "selectedidofthefilter",
                                           //   selectedidofthefilter

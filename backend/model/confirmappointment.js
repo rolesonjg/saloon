@@ -1,111 +1,73 @@
 const mongoose = require("mongoose");
-const confirmAppiontmentSchemea = new mongoose.Schema({
-    // IDoftheitem :{
-    //     type: String,
-    // },
-     // currency:{
-    //     type: mongoose.Schema.Types.Mixed,
-    //     required: true
-    // },
-    // date: {
-    //     type: mongoose.Schema.Types.Mixed,
-    //     required: true
-    // },
-    // amount:{
-    //     type: Number,
-    //     required: true
-    // },
-    // duration:{
-    //     type: mongoose.Schema.Types.Mixed,
-    //     required: true   
-    // },
-    // isadded:{
-    //     type: mongoose.Schema.Types.Mixed,
-    //     required: true    
-    // },
-     // timeunit:{
-    //     type: mongoose.Schema.Types.Mixed,
-    //     required: true    
-    // },
-      // gender:{
-
-    // },
-
-
+const selectedbuttonsdetailsschemea = new mongoose.Schema({
+    IDoftheitem:{type:String},
+    date:{
+        type: mongoose.Schema.Types.Mixed,
+        required: true  
+    },
     selectedbuttons:{
         type: mongoose.Schema.Types.Mixed,
-        required: true
+        required: true   
+    }
+});
+const userdetailsschema = new mongoose.Schema({
+    email:{
+        type: String,
+        required: true  
     },
+    gender:{
+        type: String,
+        required: true  
+    },
+    name: {
+        type: String,
+        required: true  
+    },
+    phonenumber:{
+        type: Number,
+        required: true  
+    }
+});
 
-
-    selectedservice:{
-
-        //THIS SHOULD BE AN ARRAAY
-        
+const confirmAppiontmentSchemea = new mongoose.Schema({
+    dateofappointment:{
         type: mongoose.Schema.Types.Mixed,
-                required: true
-                     //THESE ARE THE items that should be on the selecTED service 
-                    
-                     //TAKE THis AS A REFerence
-
-    //     logo:{
-    //         type: mongoose.Schema.Types.Mixed,
-    //         required: true  
-    //     },
-    //     heading:{
-    //         type: mongoose.Schema.Types.Mixed,
-    //         required: true  
-    //     },
-    //     style:{
-    //         type: String,
-    //         required: true 
-    //     },
-    //     amount:{
-    //     type: Number,
-    //     required: true
-    //   },
-    //     duration:{
-    //      type: mongoose.Schema.Types.Mixed,
-    //      required: true   
-    //  },
-
+        required: true  
+    }, 
+    numberofitems:{
+        type: Number,
+        required: true   
     },
-
     salonname:{
         type: String,
         required: true
     },
+    selectedbuttonsdetails:selectedbuttonsdetailsschemea,
+    selectedservice:{
+        type: mongoose.Schema.Types.Mixed,
+        required: true   
+    },
     stylishname:{
         type: String,
         required: true
-    },
-  
+    },  
+    timeofappointment:{
+        type: mongoose.Schema.Types.Mixed,
+        required: true   
+    },   
     timevalue:{
         type: Number,
         required: true 
     },
-
-
-    dateofappointment:{
-        type: mongoose.Schema.Types.Mixed,
-        required: true  
-    },
-    timeofappointment:{
-        type: mongoose.Schema.Types.Mixed,
-        required: true   
-    },
-    numberofitems:{
+    totalamount:{
         type: Number,
         required: true   
     },
     totaltime:{
         type: Number,
         required: true   
-    },
-    totalamount:{
-        type: Number,
-        required: true   
-    },
+    },  
+    userdetails:userdetailsschema
 });
 Selectedbutton = mongoose.model("confirmAppiontment", confirmAppiontmentSchemea);
 module.exports = Selectedbutton;

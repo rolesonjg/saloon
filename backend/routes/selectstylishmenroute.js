@@ -27,7 +27,7 @@ router.post("/images", upload.fields([
     const logoFile = req.files['logo'][0];
     const reviewimageFile = req.files['reviewimage'][0];
     const experienceimage = req.files['experienceimage'][0];
-
+    
     const newserimganddatas =  selectstylishmenmodel({   
     logo: {
         data: fs.readFileSync("uploads/" + logoFile.filename),

@@ -12,12 +12,12 @@ selectedbuttons:{
     type: mongoose.Schema.Types.Mixed,
     required: true
 },
-// email:{
-//     type: String,
-// },
-// phonenumber:{
-//     type:String
-// }
+email:{
+    type: String,
+},
+phonenumber:{
+    type:Number
+}
 });
 Selectedbutton = mongoose.model("selectedbutton", selectedbuttonsSchemea);
 module.exports = Selectedbutton;

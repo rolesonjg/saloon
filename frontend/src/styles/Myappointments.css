@@ -46,6 +46,26 @@
     z-index: 0;
   }
 
+  .content1 {
+    border: 1px solid black;   
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+  
+  .blur1 {
+ 
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.822);
+    backdrop-filter: blur(10px); /* Adjust the blur radius as needed */
+    z-index: 0;
+  }
+  
+
   .bookappointments{
 
     background-color: white;
@@ -63,4 +83,32 @@
     padding: 10px 50px 10px 50px;
    
  
+}
+
+
+.submitreview{
+
+  background-color: black;
+  color: white;
+  border: 1px solid black;
+  border-radius: 25px;
+  padding: 10px 50px 10px 50px;
+  margin: 0px 0px 25px 0px;
+}
+
+.submitreview:hover{
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 25px;
+  padding: 10px 50px 10px 50px;
+}
+
+.starhover{
+  height: 30px;
+  }
+
+.starhover:hover{
+transition: 100ms;
+height: 40px;
 }

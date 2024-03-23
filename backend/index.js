@@ -13,12 +13,9 @@ const corsOpts = {
     exposedHeaders: ['Content-Type']
 };
 app.use(cors(corsOpts))
-
-
-
 require("./db/connect")
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({limit: '10mb', extended: true }))
 
 const multer = require("multer")
 // const  GridFsStorage  = require("multer-gridfs-storage")
@@ -40,6 +37,11 @@ app.use("/selectedbuttons",Selectedbutton);
 const optroute = require("./routes/optroute");
 app.use("/otp",optroute);
 
+const myappointmentsRoute = require("./routes/myappointmentsRoute");
+app.use("/appointments",myappointmentsRoute);
+
+const confirmappointmentRoute = require("./routes/confirmappointmentRoute");
+app.use("/confirmappointment",confirmappointmentRoute);
 
 const PORT = 5000
 

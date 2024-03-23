@@ -11,11 +11,16 @@ import axios from "axios";
 
 const Validateotp = () => {
   const navigate = useNavigate();
-
+  const [isvalidate, setisvalidate] = useState(false);
+  let datatemp;
+  let datatobepassed;
+  // const [datatobepassed,setdatatobepassed] = useState()
   const location = useLocation();
   const totaldetails = location.state;
   useEffect(() => {
-    console.log("totaldetails", totaldetails);
+    // console.log("totaldetails", totaldetails);
+    datatemp = totaldetails.confirmappointmentdetails.selectedbuttonsdetails;
+    // console.log(totaldetails);
   }, [totaldetails]);
 
   const [otp, setOtp] = useState("");
@@ -24,7 +29,6 @@ const Validateotp = () => {
     const filteredValue = newValue.replace(/\D/g, "");
     setOtp(filteredValue);
   };
-
   useEffect(() => {
     if (otp.length > 5) {
       console.log("otp", otp);
@@ -41,8 +45,8 @@ const Validateotp = () => {
           console.log("Response:", response.data.message);
           if (response.data.message === "success") {
             console.log("Consolelogging when sucessfully validated ");
-
-            
+            setisvalidate(true);
+            PostbuttonDATA();
           }
         } catch (error) {
           console.error(
@@ -55,27 +59,94 @@ const Validateotp = () => {
     }
   }, [otp]);
 
-
   const PostbuttonDATA = async () => {
     try {
       const response = await axios.post(
         "http://127.0.0.1:5000/selectedbuttons/data",
         {
-          IDoftheitem: itemidentifer,
-          date: fullDate,
-          selectedbuttons: uniqueINDEXARR,
+          IDoftheitem:
+            totaldetails.confirmappointmentdetails.selectedbuttonsdetails
+              .IDoftheitem,
+          date: totaldetails.confirmappointmentdetails.selectedbuttonsdetails
+            .date,
+          selectedbuttons:
+            totaldetails.confirmappointmentdetails.selectedbuttonsdetails
+              .selectedbuttons,
+          email: totaldetails.userdetails.email,
+          phonenumber: parseInt(totaldetails.userdetails.phonenumber),
         },
         {}
       );
-      console.log("SUCESSFULLY POSTED DATA CONFIRM", response);
+      console.log("SUCESSFULLY POSTED DATA CONFIRM", response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const handlevalidate = () => {
-    navigate("/myappointments");
+  const Postappointments = async () => {
+    console.log("TOTAL DETAILS", totaldetails);
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:5000/confirmappointment/",
+        {
+          dateofappointment:
+            totaldetails.confirmappointmentdetails.dateofappointment,
+          numberofitems: totaldetails.confirmappointmentdetails.numberofitems,
+          salonname: totaldetails.confirmappointmentdetails.salonname,
+          selectedbuttonsdetails: {
+            IDoftheitem:
+              totaldetails.confirmappointmentdetails.selectedbuttonsdetails
+                .IDoftheitem,
+            date: totaldetails.confirmappointmentdetails.selectedbuttonsdetails
+              .date,
+            selectedbuttons:
+              totaldetails.confirmappointmentdetails.selectedbuttonsdetails
+                .selectedbuttons,
+          },
+          selectedservice:
+            totaldetails.confirmappointmentdetails.selectedservice,
+          stylishname: totaldetails.confirmappointmentdetails.stylishname,
+          timeofappointment:
+            totaldetails.confirmappointmentdetails.timeofappointment,
+          timevalue: totaldetails.confirmappointmentdetails.timevalue,
+          totalamount: totaldetails.confirmappointmentdetails.totalamount,
+          totaltime: totaldetails.confirmappointmentdetails.totaltime,
+          userdetails: {
+            email: totaldetails.userdetails.email,
+            gender: totaldetails.userdetails.gender,
+            name: totaldetails.userdetails.name,
+            phonenumber: totaldetails.userdetails.phonenumber,
+          },
+        },
+        {}
+      );
+      // console.log("RES", response.data);
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        navigate("/myappointments");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
+
+  const samplephoneNumber = totaldetails.userdetails.phonenumber;
+
+  // Extract last three digits
+  const lastThreeDigits = samplephoneNumber.slice(-3);
+
+  const handlevalidate = () => {
+    // navigate("/myappointments");
+    if (isvalidate === true) {
+      alert("True bro");
+      Postappointments();
+    } else {
+      alert("NOt validated bro");
+    }
+  };
+  // useEffect(()=>{
+
+  // },[isvalidate])
 
   return (
     <Container fluid>
@@ -102,7 +173,9 @@ const Validateotp = () => {
             </Row>
             <Row>
               <Col>
-                <h6 className="h6mobile">A code has been sent to *******621</h6>
+                <h6 className="h6mobile">
+                  A code has been sent to *******{lastThreeDigits}
+                </h6>
               </Col>
             </Row>
             <Row
