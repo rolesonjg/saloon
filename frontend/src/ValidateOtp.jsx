@@ -7,20 +7,65 @@ import Navbarofthesaloon from "./ui-components/Navbarofthesaloon";
 import Footer from "./ui-components/Footer";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { appointmentsdata } from "./Reducers/appointmentredusers";
 
 const Validateotp = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const appointmentsData = useSelector((state) => state.appointments.value);
+  console.log("console.log");
+
+  // useEffect(() => {
+  //   //before render
+  //   navigate("/saloonsforwomen");
+  //   console.log("console.log");
+  // }, []);
+
+  useEffect(() => {
+    console.log(
+      "appointmentsDataREDUX  \n ",
+      appointmentsData.data.confirmappointmentdetails
+    );
+
+    if (
+      appointmentsData &&
+      (Object.keys(appointmentsData.data.confirmappointmentdetails).length ===
+        0 ||
+        Object.keys(appointmentsData.data.userdetails).length === 0)
+    ) {
+      console.log(
+        "NO REDux vALue",
+        appointmentsData.data.confirmappointmentdetails
+      );
+      console.log("NO REDux vALue", appointmentsData.data.userdetails);
+
+      navigate("/saloonsforwomen");
+    } else {
+      console.log(
+        "REDux vALue for sure",
+        appointmentsData.data.confirmappointmentdetails
+      );
+      console.log("REDux vALue for sure", appointmentsData.data.userdetails);
+      // console.log(
+      //   "appointmentsData.data.confirmappointmentdetails",
+      //   appointmentsData.data.confirmappointmentdetails
+      // );
+    }
+  }, [appointmentsData]);
+  const w = appointmentsData.data.confirmappointmentdetails;
+  // console.log("appointmentsData.confirmappointmentdetails", w.length);
+
   const [isvalidate, setisvalidate] = useState(false);
   let datatemp;
   let datatobepassed;
-  // const [datatobepassed,setdatatobepassed] = useState()
   const location = useLocation();
-  const totaldetails = location.state;
+  const totaldetails = appointmentsData.data;
+  // console.log("totaldetails", totaldetails);
   useEffect(() => {
-    // console.log("totaldetails", totaldetails);
-    datatemp = totaldetails.confirmappointmentdetails.selectedbuttonsdetails;
-    // console.log(totaldetails);
+    // datatemp = totaldetails.confirmappointmentdetails.selectedbuttonsdetails;
   }, [totaldetails]);
 
   const [otp, setOtp] = useState("");
@@ -122,7 +167,13 @@ const Validateotp = () => {
       );
       // console.log("RES", response.data);
       if (response.data.token) {
+        console.log("rESSSSSPONSE..DATAAAAAA", response.data);
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem(
+          "isappointmentadded",
+          response.data.isappointmentadded
+        );
+
         navigate("/myappointments");
       }
     } catch (error) {

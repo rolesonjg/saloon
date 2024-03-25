@@ -40,13 +40,39 @@ import {
   STYLISHMENDETAILS,
 } from "./Resources/SelectStylishMenDummy";
 import { Addedtobebooked } from "./Resources/Addedtobebooked";
+import { useDispatch, useSelector } from "react-redux";
+import { wholedatacredentials } from "./Reducers/wholedata";
+import { appointmentsdata } from "./Reducers/appointmentredusers";
+
 const filteredFemaleStylishMen = STYLISHMENDETAILS.filter(
   (person) => person.gender === "female"
 );
 const Selectstylishwomen = () => {
+  const dispatch = useDispatch();
+  const wholeDataREDUX = useSelector((state) => state.wholedata.value);
+  const acutualappointmentdata = useSelector(
+    (state) => state.appointments.value
+  );
+
+  const [trigger, settrigger] = useState(false);
+
+  useEffect(() => {
+    // console.log("whole data ...............", wholeDataREDUX);
+    if (
+      Object.keys(wholeDataREDUX.data.saloondetails).length === 0 ||
+      Object.keys(wholeDataREDUX.data.servicedetails).length === 0
+    ) {
+      navigate("/saloonsforwomen");
+    }
+  }, [wholeDataREDUX]);
+
+  useEffect(() => {
+    console.log("acutualappointmentdata", acutualappointmentdata);
+  }, [acutualappointmentdata]);
+
   const location = useLocation();
-  const x = location.state.selectedService;
-  const headingpassedfromsaloon = location.state.headingpassedfromsaloon;
+  const x = wholeDataREDUX.data.servicedetails.selectedService;
+  const headingpassedfromsaloon = wholeDataREDUX.data.saloondetails.saloonname;
   const [currentstylish, setcurrentstylish] = useState();
   const [alldetailstoappoint, setalldatetoappoint] = useState({
     selectedbuttons: {},
@@ -65,13 +91,35 @@ const Selectstylishwomen = () => {
     // console.log("alldetailstoappoint", alldetailstoappoint);
     if (uniqueINDEXARR.length === 0) {
       alert("select the timing");
+      console.log("SELECT THE TIMiNGI");
     } else {
-      // navigate("/mobile", {
-      //   state: {
-      //     confirmappointmentdetails: alldetailstoappoint,
-      //   },
-      // });
-      // console.log("___________");
+      if (alldetailstoappoint.dateofappointment.length > 0) {
+        console.log("CHECK");
+
+        const someTempvar = wholeDataREDUX;
+
+        dispatch(
+          wholedatacredentials({
+            data: {
+              saloondetails: someTempvar.data.saloondetails,
+              servicedetails: someTempvar.data.servicedetails,
+              stylishdetails: {
+                confirmappointmentdetails: alldetailstoappoint,
+              },
+            },
+          })
+        );
+        dispatch(
+          appointmentsdata({
+            data: {
+              saloondetails: {},
+              confirmappointmentdetails: alldetailstoappoint,
+              userdetails: {},
+            },
+          })
+        );
+        navigate("/mobile");
+      }
     }
   }, [alldetailstoappoint]);
 
@@ -224,15 +272,41 @@ const Selectstylishwomen = () => {
       });
       alert("GOING to mobile");
 
-      if (alldetailstoappoint.dateofappointment.length > 0) {
-        // console.log("alldetailstoappoint cccc", alldetailstoappoint);
+      // if (alldetailstoappoint.dateofappointment.length > 0) {
+      //   alert("Success if its alerts the first time");
+      //   console.log("CHECK");
 
-        navigate("/mobile", {
-          state: {
-            confirmappointmentdetails: alldetailstoappoint,
-          },
-        });
-      }
+      //   const someTempvar = wholeDataREDUX;
+
+      //   dispatch(
+      //     wholedatacredentials({
+      //       data: {
+      //         saloondetails: someTempvar.data.saloondetails,
+      //         servicedetails: someTempvar.data.servicedetails,
+      //         stylishdetails: {
+      //           confirmappointmentdetails: alldetailstoappoint,
+      //         },
+      //       },
+      //     })
+      //   );
+      //   dispatch(
+      //     appointmentsdata({
+      //       data: {
+      //         saloondetails: {},
+      //         confirmappointmentdetails: alldetailstoappoint,
+      //         userdetails: {},
+      //       },
+      //     })
+      //   );
+
+      //   // navigate("/mobile", {
+      //   //   state: {
+      //   //     confirmappointmentdetails: alldetailstoappoint,
+      //   //   },
+      //   // });
+
+      //   // navigate("/mobile");
+      // }
 
       // console.log("ALLAPPOINTMENTS DETAILS", alldetailstoappoint);
       // PostbuttonDATAget();
@@ -1436,6 +1510,7 @@ const Selectstylishwomen = () => {
                       variant=""
                       style={{ border: "1px solid black" }}
                       className="buttonofsecondary "
+                      onClick={handleconfirmappointment}
                     >
                       <h6
                         style={{
@@ -1445,7 +1520,6 @@ const Selectstylishwomen = () => {
                           padding: "5px",
                           margin: "0px",
                         }}
-                        onClick={handleconfirmappointment}
                       >
                         Confirm Appointment
                       </h6>

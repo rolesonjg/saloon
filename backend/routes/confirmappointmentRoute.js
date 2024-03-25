@@ -47,14 +47,14 @@ router.get("/",async (req, res) => {
         phonenumber:req.body.userdetails.phonenumber
     } 
       })
-      newAppointment.save();
-      const token = createSecretToken(req.body.userdetails.email,req.body.userdetails.phonenumber);
+      await newAppointment.save();    
+        const token = createSecretToken(req.body.userdetails.email,req.body.userdetails.phonenumber);
       res.cookie("token", token, {
         withCredentials: true,
         httpOnly: false,
       });
       // console.log("newAppointment",newAppointment)
-       res.status(201).json({ message:"I think it worked",token:token,newAppointment:newAppointment})
+       res.status(201).json({ message:"I think it worked",token:token,newAppointment:newAppointment,isappointmentadded:true})
       } 
     catch (error) {
       console.error(error);
@@ -137,18 +137,21 @@ router.get("/",async (req, res) => {
  router.post('/verifytoken', async (req, res, next) => {
   try { 
     const  { token} =  req.body
-    console.log(" req.body", req.body)
+    // console.log(" req.body", req.body)
 
     const decodedtoken =  jwt.decode(token);
-    // console.log(" req.body", req.body)
-    // console.log("decodedtoken",decodedtoken.email);
-    // console.log("decodedtoken",decodedtoken.phonenumber);
+   
     const email = decodedtoken.email;
     const phonenumber = decodedtoken.phonenumber;                                    
     const specificuserdata = await confirmappointment.find({'userdetails.email': email,'userdetails.phonenumber': phonenumber});
-    // console.log("userdata",specificuserdata);
-    // const specificuserButtondata = await Selectedbutton.find({email: email});
-    // console.log('specificuserButtondata',specificuserButtondata)
+    // console.log(" userdata",specificuserdata)
+    let tempindexstore=[]; 
+    specificuserdata.map((itemuser,indexuser)=>{
+      // console.log(indexuser,":::::::    \n ", itemuser)
+      tempindexstore.push(indexuser)
+
+    })
+        console.log(" tempindexstore",tempindexstore)
 
     res.status(201).json({ message:"I think it worked",userdata:specificuserdata});
     

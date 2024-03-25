@@ -16,7 +16,12 @@ import { DATA } from "./Resources/SaloonsformenDummy";
 import axios from "axios";
 import ReactSearchBox from "react-search-box";
 import DisplayData from "./DisplayData";
+import { useDispatch, useSelector } from "react-redux";
+import { wholedatacredentials } from "./Reducers/wholedata";
 const Saloonsforwomen = () => {
+  const dispatch = useDispatch();
+  const wholeDataREDUX = useSelector((state) => state.wholedata.value);
+
   const [saloonnametobepassed, setsaloonnametobepassed] = useState("");
 
   const [searchValue, setSearchValue] = useState("Doe");
@@ -64,16 +69,40 @@ const Saloonsforwomen = () => {
     console.log("AFTER CLICK SHOW ITEM", item._id);
     // setsaloonnametobepassed(item.heading);
 
-    navigate("/serviceforwomen", {
-      state: {
-        saloonname: item.heading,
-        saloonnameID: item._id,
-      },
-    });
+    const someTempvar = wholeDataREDUX;
+    console.log("wholeDataREDUX", wholeDataREDUX);
+
+    // // console.log("wholeDataREDUX", wholeDataREDUX.data[0].saloondetails);
+
+    dispatch(
+      wholedatacredentials({
+        data: {
+          saloondetails: {
+            saloonname: item.heading,
+            saloonnameID: item._id,
+          },
+          servicedetails: someTempvar.data.servicedetails,
+          stylishdetails: someTempvar.data.stylishdetails,
+        },
+      })
+    );
+    // console.log("wholeDataREDUX", wholeDataREDUX.data.stylishdetails);
+    // someTempvar.data[0].saloondetails = {
+    //   saloonname: item.heading,
+    //   saloonnameID: item._id,
+    // };
+
+    // console.log("wholeDataREDUX", wholeDataREDUX);
+    // navigate("/serviceforwomen", {
+    //   state: {
+    //     saloonname: item.heading,
+    //     saloonnameID: item._id,
+    //   },
+    // });
+    navigate("/serviceforwomen");
   };
 
   const [filteredDatapro, setfilteredDatapro] = useState([]);
-
   const [dataImagearray, setDataImagearray] = useState([]);
   const [dataImage, setDataImage] = useState([]);
   const [data, setData] = useState([]);

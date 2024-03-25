@@ -14,14 +14,30 @@ import clock from "./assets/clockpixeled.png";
 import moneyimage from "./assets/moneypixeleted.png";
 import close from "./assets/closepixelated.png";
 import ReactSearchBox from "react-search-box";
-
 import axios from "axios";
-const Serviceformen = () => {
-  let location = useLocation();
-  const headingpassedfromsaloon = location.state.saloonname;
-  const IDpassedfromsaloon = location.state.saloonnameID;
+import { useDispatch, useSelector } from "react-redux";
+import { wholedatacredentials } from "./Reducers/wholedata";
 
-  console.log("IDpassedfromsaloon", IDpassedfromsaloon);
+const Serviceformen = () => {
+  const dispatch = useDispatch();
+  const wholeDataREDUX = useSelector((state) => state.wholedata.value);
+
+  useEffect(() => {
+    console.log("whole data ...............", wholeDataREDUX);
+    if (Object.keys(wholeDataREDUX.data.saloondetails).length === 0) {
+      navigate("/saloonsforwomen");
+    }
+  }, []);
+
+  let location = useLocation();
+
+  // const headingpassedfromsaloon = location.state.saloonname;
+  // const IDpassedfromsaloon = location.state.saloonnameID;
+
+  const headingpassedfromsaloon = wholeDataREDUX.data.saloondetails.saloonname;
+  const IDpassedfromsaloon = wholeDataREDUX.data.saloondetails.saloonnameID;
+
+  // console.log("IDpassedfromsaloon", IDpassedfromsaloon);
   const [filteredSearchData, setFilteredSearchData] = useState("");
   const [searchValue, setSearchValue] = useState("Doe");
   const data2 = [
@@ -48,7 +64,7 @@ const Serviceformen = () => {
   ];
   const handleSearch = (value) => {
     setSearchValue(value);
-    console.log("filteredIMGDATA IN the searCH", filteredIMGDATA);
+    // console.log("filteredIMGDATA IN the searCH", filteredIMGDATA);
 
     const filteredservice = filteredSearchData.filter((item) =>
       item.heading.toLowerCase().includes(value.toString().toLowerCase())
@@ -96,7 +112,7 @@ const Serviceformen = () => {
       SetservIMGandDATAS(response2.data.saloonformen);
       setFiltereImgDat(response2.data.saloonformen);
       setFilteredSearchData(response2.data.saloonformen);
-      console.log("response from the backend", response);
+      // console.log("response from the backend", response);
 
       // console.log("response from the backend", response.data.saloonformen);
       // console.log("FILTERRRRRRRRR", response2.data);
@@ -109,14 +125,14 @@ const Serviceformen = () => {
   const handleclosebuttonclick = (itempromax, index) => {
     const updatedFilteredIMGDATA = filteredIMGDATA.map((item, i) => {
       if (item._id === itempromax._id) {
-        console.log("index and i", i, index);
+        // console.log("index and i", i, index);
 
         item.isadded = item.isadded === "add" ? "Added" : "add";
         setTotalItems(selectedService.length - 1);
         setTotalAmount((prevamount) => prevamount - itempromax.amount);
 
-        console.log("ITEM", item);
-        console.log("ITEM PRO MAX", itempromax);
+        // console.log("ITEM", item);
+        // console.log("ITEM PRO MAX", itempromax);
       }
       if (addedItems.index === false) {
         console.log("FSDFSDFSDFSDFSD");
@@ -133,10 +149,10 @@ const Serviceformen = () => {
     setClosedID(x);
     setselectedservice(x);
     setTotaltime((prevtime) => prevtime - itempromax.timevalue);
-    console.log("xxxxxxxxxx", x);
+    // console.log("xxxxxxxxxx", x);
   };
   useEffect(() => {
-    console.log("TOTALITEMSSSSS", totalItems);
+    // console.log("TOTALITEMSSSSS", totalItems);
   }, [totalItems]);
   useEffect(() => {
     fetchData();
@@ -145,10 +161,10 @@ const Serviceformen = () => {
     typesmapfuncwrapper();
   }, [serviceTypes, serIMGandDATAS]);
   useEffect(() => {
-    console.log("Closed", closedID);
+    // console.log("Closed", closedID);
   }, [closedID]);
   useEffect(() => {
-    console.log("totalTime", totalTime);
+    // console.log("totalTime", totalTime);
     let minutesValue = parseInt(totalTime);
     let hoursValue = Math.floor(minutesValue / 60);
     let remainingMinutesValue = minutesValue % 60;
@@ -160,7 +176,7 @@ const Serviceformen = () => {
     }
   }, [totalTime]);
   useEffect(() => {
-    console.log("CONVERTED TiME", convertedTime);
+    // console.log("CONVERTED TiME", convertedTime);
   }, [convertedTime]);
 
   const typesmapfuncwrapper = () => {
@@ -185,7 +201,7 @@ const Serviceformen = () => {
   const navigate = useNavigate();
 
   const handleAdd = (itempromax, index) => {
-    console.log("ADDED ITMEM chheck", itempromax);
+    // console.log("ADDED ITMEM chheck", itempromax);
     const updatedFilteredIMGDATA = filteredIMGDATA.map((item, i) => {
       if (i === index) {
         item.isadded = item.isadded === "add" ? "Added" : "add";
@@ -199,12 +215,12 @@ const Serviceformen = () => {
     }));
 
     if (addedItems[index] == true) {
-      console.log("TRUTHY");
+      // console.log("TRUTHY");
       const x = selectedService.filter((v) => {
         return itempromax._id !== v._id;
       });
       setselectedservice(x);
-      console.log("SS", selectedService);
+      // console.log("SS", selectedService);
     } else {
       setTotalItems(selectedService.length + 1);
       setTotaltime((prevtime) => prevtime + itempromax.timevalue);
@@ -215,13 +231,13 @@ const Serviceformen = () => {
 
       y.push(itempromax);
 
-      console.log(itempromax.isadded);
+      // console.log(itempromax.isadded);
       if (itempromax.isadded === "add") {
-        console.log("CRINGE");
+        // console.log("CRINGE");
         setTotaltime((prevtime) => prevtime - itempromax.timevalue);
         setTotalItems(selectedService.length);
         setTotalAmount((prevamount) => prevamount - itempromax.amount);
-        console.log(totalItems);
+        // console.log(totalItems);
       }
       if ((itempromax.isadded = "Added")) {
         console.log("SDFSDFS");
@@ -229,18 +245,35 @@ const Serviceformen = () => {
 
       setselectedservice(y);
 
-      console.log(" yitem._id===itempromax._id", y);
+      // console.log(" yitem._id===itempromax._id", y);
     }
     setFiltereImgDat(updatedFilteredIMGDATA);
   };
 
   const handleselectstylish = () => {
-    navigate("/selectstylishwomen", {
-      state: {
-        headingpassedfromsaloon: headingpassedfromsaloon,
-        selectedService: selectedService,
-      },
-    });
+    const someTempvar = wholeDataREDUX;
+    // console.log("wholeDataREDUX", wholeDataREDUX);
+
+    dispatch(
+      wholedatacredentials({
+        data: {
+          saloondetails: someTempvar.data.saloondetails,
+          servicedetails: {
+            headingpassedfromsaloon: headingpassedfromsaloon,
+            selectedService: selectedService,
+          },
+          stylishdetails: someTempvar.data.stylishdetails,
+        },
+      })
+    );
+
+    // navigate("/selectstylishwomen", {
+    //   state: {
+    //     headingpassedfromsaloon: headingpassedfromsaloon,
+    //     selectedService: selectedService,
+    //   },
+    // });
+    navigate("/selectstylishwomen");
   };
   return (
     <Container fluid style={{ position: "relative" }}>
@@ -292,7 +325,7 @@ const Serviceformen = () => {
                         value={searchValue}
                         data={filteredIMGDATA}
                         onChange={(value) => handleSearch(value)}
-                        onSelect={(record) => console.log(record)}
+                        // onSelect={(record) => console.log(record)}
                         rightIcon={<>🎨</>}
                         inputHeight="20px"
                         inputBorderColor="white"

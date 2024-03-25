@@ -15,23 +15,85 @@ import monetappointments from "./assets/monetappointments.png";
 import SalonName from "./assets/SalonName.png";
 import TimeofAppointment from "./assets/TimeofAppointment.png";
 import YourStylist from "./assets/YourStylist.png";
-
+import certifiedtick from "./assets/certifiedtick.png";
+import closecertification from "./assets/closecertification.png";
 import barbermen from "./assets/barbermen.png";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import reviewon from "./assets/reviewon.png";
 import reviewoff from "./assets/reviewoff.png";
-
 // var jwt = require("jsonwebtoken");
 const Myappointments = () => {
+  const [showAlert, setShowAlert] = useState(false);
+
+  const handleShowAlert = () => {
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 3000);
+  };
+
+  const handleConfirmAlert = () => {
+    setShowAlert(false);
+    localStorage.removeItem("isappointmentadded");
+
+    // Add any additional logic here after the user confirms the alert
+  };
+
+  const CustomAlert = ({ message, onConfirm }) => {
+    return (
+      <div className="custom-alert-overlay d-flex">
+        <Row
+          style={{
+            background: "rgba(182, 234, 205, 1)",
+            borderBottom: "5px solid rgba(0, 158, 68, 1)",
+            fontFamily: "poppins,sans-serif",
+          }}
+          className="custom-alert "
+        >
+          <Col className="col-2">
+            <img
+              style={{ height: "40px", marginTop: "7px" }}
+              src={certifiedtick}
+              alt=""
+            />
+          </Col>
+          <Col className="col-9">
+            <h4>Success</h4>
+            <p>The appointment has completed successfully.</p>
+          </Col>
+          <Col style={{ justifyContent: "end" }} className="col-1 d-flex ">
+            <img
+              style={{ height: "30px", marginTop: "13px" }}
+              onClick={onConfirm}
+              src={closecertification}
+              alt=""
+            />
+
+            {/* <button style={{ width: "50px" }} onClick={onConfirm}>
+              OK
+            </button> */}
+          </Col>
+        </Row>
+      </div>
+    );
+  };
+
   const reviewref = useRef(null);
   const [isappointmentsempty, setisappointmentsempty] = useState(false);
   const [reviewtoggle, setreviewtoggle] = useState(false);
   const [isservicecompleted, setservicecompleted] = useState([]);
 
   const [reviewstarcolours, setreviewstarcount] = useState([
+    { id: 1, star: false },
+    { id: 2, star: false },
+    { id: 3, star: false },
+    { id: 4, star: false },
+    { id: 5, star: false },
+  ]);
+
+  const [reviewstarcolours2, setreviewstarcount2] = useState([
     { id: 1, star: false },
     { id: 2, star: false },
     { id: 3, star: false },
@@ -48,22 +110,56 @@ const Myappointments = () => {
   const handlereviewclick = (index) => {
     console.log(index);
     // setreviewstarcount((reviewstarcolours[index + 1].star = true));'
-    const updatedReviewStarColours = [...reviewstarcolours]; // Create a copy of the array
+    const updatedReviewStarColours = [...reviewstarcolours];
 
-    for (let x = index; x >= 0; x--) {
-      if (index === 0) {
-        alert("0");
+    for (let x = 0; x < 5; x++) {
+      // updatedReviewStarColours[x].star
+
+      if (index === x) {
+        console.log("index", index);
+        if (updatedReviewStarColours[x].star === true) {
+          updatedReviewStarColours[x].star = false;
+        } else {
+          updatedReviewStarColours[x].star = true;
+        }
+      }
+      if (index < x) {
         updatedReviewStarColours[x].star = false;
       }
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", x);
-      updatedReviewStarColours[x].star = true;
-    }
-    for (let x = index + 1; x < 5; x++) {
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", x);
-      updatedReviewStarColours[x].star = false;
+      if (index > x) {
+        updatedReviewStarColours[x].star = true;
+      }
     }
     // Update the star property
     setreviewstarcount(updatedReviewStarColours); // Update the state with the modified array
+    // alert(index);
+  };
+
+  const handlereviewclick2 = (index) => {
+    console.log(index);
+    // setreviewstarcount((reviewstarcolours[index + 1].star = true));'
+    const updatedReviewStarColours = [...reviewstarcolours2];
+
+    for (let x = 0; x < 5; x++) {
+      // updatedReviewStarColours[x].star
+
+      if (index === x) {
+        console.log("index", index);
+        if (updatedReviewStarColours[x].star === true) {
+          updatedReviewStarColours[x].star = false;
+        } else {
+          updatedReviewStarColours[x].star = true;
+        }
+      }
+      if (index < x) {
+        updatedReviewStarColours[x].star = false;
+      }
+      if (index > x) {
+        updatedReviewStarColours[x].star = true;
+      }
+    }
+    // Update the star property
+    setreviewstarcount2(updatedReviewStarColours); // Update the state with the modified array
     // alert(index);
   };
 
@@ -92,10 +188,17 @@ const Myappointments = () => {
   const [responsefrombackend, setresponsefrombackend] = useState("");
   const [deletedite, setdeleteditem] = useState();
   const navigate = useNavigate();
+
   useEffect(() => {
     responsefrombackend.length > 0 &&
       responsefrombackend.map((item, index) => {
-        // console.log("ITEM +BEFORE YEARS", item);
+        const isappointmentadded = localStorage.getItem("isappointmentadded");
+        console.log("isappointmentadded is true", isappointmentadded);
+        if (isappointmentadded === false || isappointmentadded === null) {
+        } else {
+          setShowAlert(true);
+        } // console.log("ITEM +BEFORE YEARS", item);
+
         const inputDate = `${item.selectedbuttonsdetails.date.years}-${
           item.selectedbuttonsdetails.date.months + 1
         }-${item.selectedbuttonsdetails.date.days}`; // Format: YYYY-MM-DD
@@ -116,6 +219,7 @@ const Myappointments = () => {
       });
     console.log("RESPONSE", responsefrombackend);
   }, [responsefrombackend]);
+
   useEffect(() => {
     // console.log("deletedite", deletedite);
   }, [deletedite]);
@@ -134,6 +238,7 @@ const Myappointments = () => {
           token: storedToken,
         }
       );
+
       // console.log("RESPONSE FORM VEERIFY TOKEN", response);
       setresponsefrombackend(response.data.userdata);
     } else {
@@ -142,6 +247,12 @@ const Myappointments = () => {
   };
   useEffect(() => {
     // console.log("Token", storedToken);
+    // const isappointmentadded = localStorage.getItem("isappointmentadded");
+    // console.log("isappointmentadded is true", isappointmentadded);
+    // if (isappointmentadded === false || isappointmentadded === null) {
+    // } else {
+    //   setShowAlert(true);
+    // }
     sendTokentoverify();
   }, []);
 
@@ -1025,7 +1136,7 @@ const Myappointments = () => {
         <Row
           style={{
             marginBottom: "10px",
-            width: "200px",
+            width: "250px",
             marginLeft: "1px",
           }}
         >
@@ -1037,7 +1148,12 @@ const Myappointments = () => {
               })}
           </Col> */}
 
-          <Col style={{ padding: "0px", margin: "0px" }}>
+          <Col
+            style={{
+              padding: "0px",
+              margin: "0px",
+            }}
+          >
             {reviewstarcolours.length > 0 &&
               reviewstarcolours.map((itemreviewcolor, indexreviewcolor) => {
                 // console.log("itemreviewcolor", itemreviewcolor.star);
@@ -1084,11 +1200,12 @@ const Myappointments = () => {
             Rate this Stylist{" "}
           </Col>
           <Col style={{ justifyContent: "end" }} className="d-flex col-6 ">
-            <img
+            {/* <img
               style={{ height: "30px", marginTop: "3px" }}
               src={SalonName}
               alt=""
-            />
+            /> */}
+
             <div
               style={{
                 display: "flex",
@@ -1115,7 +1232,31 @@ const Myappointments = () => {
         </Row>
 
         <Row style={{ marginBottom: "10px" }}>
-          <img style={{ width: "220px" }} src={onsestarpixelated} alt="" />
+          {/* <img style={{ width: "220px" }} src={onsestarpixelated} alt="" /> */}
+          <Col>
+            {reviewstarcolours2.length > 0 &&
+              reviewstarcolours2.map((itemreviewcolor, indexreviewcolor) => {
+                // console.log("itemreviewcolor", itemreviewcolor.star);
+                if (itemreviewcolor.star === false) {
+                  console.log("TRUEEEEEEEEEEE");
+                }
+                return (
+                  <img
+                    key={indexreviewcolor} // Add a unique key prop
+                    id={indexreviewcolor}
+                    onClick={() => handlereviewclick2(indexreviewcolor)}
+                    className="starhover"
+                    style={
+                      {
+                        // border: itemreviewcolor.star ? "1px solid black" : "",
+                      }
+                    }
+                    src={itemreviewcolor.star ? reviewon : reviewoff}
+                    alt=""
+                  />
+                );
+              })}
+          </Col>
         </Row>
 
         <Row style={{ marginTop: "10px" }}>
@@ -1143,6 +1284,16 @@ const Myappointments = () => {
           </Col>
         </Row>
       </Container>
+      <Row>
+        <Col>
+          {showAlert && (
+            <CustomAlert
+              message="This is a custom alert message!"
+              onConfirm={handleConfirmAlert}
+            />
+          )}
+        </Col>
+      </Row>
       <Row style={{ marginTop: "200px" }}>
         <Col>
           <Footer />

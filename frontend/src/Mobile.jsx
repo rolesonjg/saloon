@@ -4,17 +4,41 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbarofthesaloon from "./ui-components/Navbarofthesaloon";
 import Footer from "./ui-components/Footer";
 import axios from "axios";
-
+import { useDispatch, useSelector } from "react-redux";
+import { appointmentsdata } from "./Reducers/appointmentredusers";
 const Mobile = () => {
-  const location = useLocation();
-  const confirmappointmentdetails = location.state.confirmappointmentdetails;
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  const appointmentsData = useSelector((state) => state.appointments.value);
   useEffect(() => {
-    console.log("location.state", confirmappointmentdetails);
-  }, []);
+    console.log("APPOIntments", appointmentsData);
+    if (
+      appointmentsData &&
+      Object.keys(appointmentsData.data.confirmappointmentdetails).length === 0
+    ) {
+      alert("THERE IS NO REDux vALue");
+      console.log("Appointmentssssssss", appointmentsData);
+      navigate("/saloonsforwomen");
+    } else {
+      alert(" REDux vALue for sure");
+      console.log(
+        "appointmentsData.data.confirmappointmentdetails",
+        appointmentsData.data.confirmappointmentdetails
+      );
+    }
+  }, [appointmentsData]);
+  const location = useLocation();
+
+  const confirmappointmentdetails = appointmentsData.confirmappointmentdetails;
+  // useEffect(() => {
+  //   console.log("location.state", confirmappointmentdetails);
+  // }, []);s
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
+
   const [selectedValue, setSelectedValue] = useState("FEMALE");
   const [inputValue, setInputValue] = useState("");
   const [emailValue, setEmailValue] = useState("");
@@ -73,11 +97,12 @@ const Mobile = () => {
         console.log("response", response);
 
         if (response.data.message.length > 0) {
-          if (location.state !== null) {
-            // Do something with location.state
-            navigate("/validateotp", {
-              state: {
-                confirmappointmentdetails: confirmappointmentdetails,
+          dispatch(
+            appointmentsdata({
+              data: {
+                saloondetails: {},
+                confirmappointmentdetails:
+                  appointmentsData.data.confirmappointmentdetails,
                 userdetails: {
                   name: nameValue,
                   gender: selectedValue,
@@ -85,21 +110,47 @@ const Mobile = () => {
                   phonenumber: inputValue,
                 },
               },
-            });
-          } else {
-            // Handle the case where location.state is null
-            alert("location.state is null");
-            // navigate("/validateotp", {
-            //   state: {
-            //     userdetails: {
-            //       name: nameValue,
-            //       gender: selectedValue,
-            //       email: emailValue,
-            //       phonenumber: inputValue,
-            //     },
-            //   },
-            // });
-          }
+            })
+          );
+          console.log("NAVIAGTION Line before");
+          navigate("/validateotp");
+          console.log("NAVIAGTION Line after");
+
+          // alert("afternavigatingline");
+
+          // if (location.state !== null) {
+          //   // Do something with location.state
+
+          //   // navigate("/validateotp", {
+          //   //   state: {
+          //   //     confirmappointmentdetails: confirmappointmentdetails,
+          //   //     userdetails: {
+          //   //       name: nameValue,
+          //   //       gender: selectedValue,
+          //   //       email: emailValue,
+          //   //       phonenumber: inputValue,
+          //   //     },
+          //   //   },
+          //   // });
+          //   dispatch(
+          //     appointmentsdata({
+          //       data: {
+          //         saloondetails: {},
+          //         confirmappointmentdetails: alldetailstoappoint,
+          //         userdetails: {
+          //           name: nameValue,
+          //           gender: selectedValue,
+          //           email: emailValue,
+          //           phonenumber: inputValue,
+          //         },
+          //       },
+          //     })
+          //   );
+          //   navigate("/validateotp");
+          // } else {
+          //   // Handle the case where location.state is null
+          //   alert("location.state is null");
+          // }
         } else {
           console.log("Error occurred:", response.data.message);
         }
@@ -112,8 +163,6 @@ const Mobile = () => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   };
-
-  const navigate = useNavigate();
 
   const [vaidateclick, setvaidateclick] = useState(false);
   useEffect(() => {

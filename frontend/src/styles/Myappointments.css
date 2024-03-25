@@ -106,9 +106,67 @@
 
 .starhover{
   height: 30px;
+  margin-right: 10px;
   }
 
-.starhover:hover{
-transition: 100ms;
-height: 40px;
+
+
+
+
+
+/* CustomAlert.css */
+.custom-alert-overlay {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: top;
 }
+
+.custom-alert {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  height: 100px;
+  width:60%;
+  /* animation: fadeOut 4s ease forwards; */
+  /* opacity: 1;
+  transition: opacity 0.5s ease; */
+}
+
+.custom-alert-content {
+  margin-bottom: 10px;
+}
+
+.custom-alert-buttons {
+  text-align: right;
+}
+
+.custom-alert-buttons button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.custom-alert-buttons button:hover {
+  background-color: #0056b3;
+}
+
+
+/* @keyframes fadeOut {
+  0% {
+    opacity: 1;
+
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
+} */
