@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, InputGroup, Form, Button } from "react-bootstrap";
 import { CiSearch } from "react-icons/ci";
 import "./styles/Serviceformen.css";
-
+import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import Navbarofthesaloon from "./ui-components/Navbarofthesaloon";
@@ -10,15 +10,34 @@ import Footer from "./ui-components/Footer";
 import { AVAILABLESERVICES, TYPES } from "./Resources/ServiceformenDummy";
 import { Addedtobebooked } from "./Resources/Addedtobebooked";
 import { STYLISHMENDETAILS } from "./Resources/SelectStylishMenDummy";
-// import clock from "./assets/clock.png";
 import clock from "./assets/clockpixeled.png";
-// import moneyimage from "./assets/moneyimage.png";
 import moneyimage from "./assets/moneypixeleted.png";
 import close from "./assets/closepixelated.png";
 import ReactSearchBox from "react-search-box";
-
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { wholedatacredentials } from "./Reducers/wholedata";
+
 const Serviceformen = () => {
+  const dispatch = useDispatch();
+  const wholeDataREDUX = useSelector((state) => state.wholedata.value);
+
+  useEffect(() => {
+    console.log("whole data ...............", wholeDataREDUX);
+    if (Object.keys(wholeDataREDUX.data.saloondetails).length === 0) {
+      navigate("/saloonsformen");
+    }
+  }, []);
+
+  let location = useLocation();
+
+  // const headingpassedfromsaloon = location.state.saloonname;
+  // const IDpassedfromsaloon = location.state.saloonnameID;
+
+  const headingpassedfromsaloon = wholeDataREDUX.data.saloondetails.saloonname;
+  const IDpassedfromsaloon = wholeDataREDUX.data.saloondetails.saloonnameID;
+
+  // console.log("IDpassedfromsaloon", IDpassedfromsaloon);
   const [filteredSearchData, setFilteredSearchData] = useState("");
   const [searchValue, setSearchValue] = useState("Doe");
   const data2 = [
@@ -45,7 +64,7 @@ const Serviceformen = () => {
   ];
   const handleSearch = (value) => {
     setSearchValue(value);
-    console.log("filteredIMGDATA IN the searCH", filteredIMGDATA);
+    // console.log("filteredIMGDATA IN the searCH", filteredIMGDATA);
 
     const filteredservice = filteredSearchData.filter((item) =>
       item.heading.toLowerCase().includes(value.toString().toLowerCase())
@@ -72,22 +91,32 @@ const Serviceformen = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:5000/serviceformenimageroute/data"
+        "http://127.0.0.1:5000/serviceformenimageroute/data",
+        {
+          params: {
+            IDpassedfromsaloon: IDpassedfromsaloon,
+          },
+        }
       );
-      // const response44 = await axios.post(
-      //   "http://127.0.0.1:5000/serviceformenimageroute/data"
-      // );
+
       const response2 = await axios.get(
-        "http://127.0.0.1:5000/serviceformenimageroute/images"
+        "http://127.0.0.1:5000/serviceformenimageroute/images",
+        {
+          params: {
+            IDpassedfromsaloon: IDpassedfromsaloon,
+          },
+        }
       );
 
       setserviceTypes(response.data.saloonformen);
       SetservIMGandDATAS(response2.data.saloonformen);
       setFiltereImgDat(response2.data.saloonformen);
       setFilteredSearchData(response2.data.saloonformen);
-      console.log("response from the backend", response.data.saloonformen);
-      console.log("FILTERRRRRRRRR", response2.data);
-      console.log("setservice", serIMGandDATAS);
+      // console.log("response from the backend", response);
+
+      // console.log("response from the backend", response.data.saloonformen);
+      // console.log("FILTERRRRRRRRR", response2.data);
+      // console.log("setservice", serIMGandDATAS);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -96,24 +125,19 @@ const Serviceformen = () => {
   const handleclosebuttonclick = (itempromax, index) => {
     const updatedFilteredIMGDATA = filteredIMGDATA.map((item, i) => {
       if (item._id === itempromax._id) {
-        console.log("index and i", i, index);
+        // console.log("index and i", i, index);
 
         item.isadded = item.isadded === "add" ? "Added" : "add";
         setTotalItems(selectedService.length - 1);
         setTotalAmount((prevamount) => prevamount - itempromax.amount);
 
-        console.log("ITEM", item);
-        console.log("ITEM PRO MAX", itempromax);
+        // console.log("ITEM", item);
+        // console.log("ITEM PRO MAX", itempromax);
       }
       if (addedItems.index === false) {
         console.log("FSDFSDFSDFSDFSD");
       }
 
-      // if (i === index) {
-      //         console.log("index and i", i, index);
-
-      //   item.isadded = item.isadded === "add" ? "Added" : "add";
-      // }
       return item;
     });
     setFiltereImgDat(updatedFilteredIMGDATA);
@@ -125,25 +149,22 @@ const Serviceformen = () => {
     setClosedID(x);
     setselectedservice(x);
     setTotaltime((prevtime) => prevtime - itempromax.timevalue);
-    console.log("xxxxxxxxxx", x);
+    // console.log("xxxxxxxxxx", x);
   };
   useEffect(() => {
-    console.log("TOTALITEMSSSSS", totalItems);
+    // console.log("TOTALITEMSSSSS", totalItems);
   }, [totalItems]);
   useEffect(() => {
     fetchData();
   }, []);
   useEffect(() => {
     typesmapfuncwrapper();
-    // console.log("serviceTypes", serviceTypes);
-
-    // console.log("serIMGandDATAS", serIMGandDATAS);
   }, [serviceTypes, serIMGandDATAS]);
   useEffect(() => {
-    console.log("Closed", closedID);
+    // console.log("Closed", closedID);
   }, [closedID]);
   useEffect(() => {
-    console.log("totalTime", totalTime);
+    // console.log("totalTime", totalTime);
     let minutesValue = parseInt(totalTime);
     let hoursValue = Math.floor(minutesValue / 60);
     let remainingMinutesValue = minutesValue % 60;
@@ -153,22 +174,17 @@ const Serviceformen = () => {
     if (hoursValue >= 1) {
       setConvertedTime(`${hoursValue} hours   ${remainingMinutesValue} mins `);
     }
-    // setConvertedTime(`${hoursValue} hours   ${remainingMinutesValue} mins `);
   }, [totalTime]);
   useEffect(() => {
-    console.log("CONVERTED TiME", convertedTime);
+    // console.log("CONVERTED TiME", convertedTime);
   }, [convertedTime]);
 
   const typesmapfuncwrapper = () => {
     if (serviceTypes) {
-      const c = serviceTypes.map((item) => {
-        // console.log("ITEM", item);
-      });
-      // console.log("serIMGandDATAS", serIMGandDATAS);
+      const c = serviceTypes.map((item) => {});
     }
   };
   const handleTypesclick = (item) => {
-    // console.log("ITEMSSSSSSS", item);
     setwholedata((prevState) => ({
       ...prevState,
       [item]: true,
@@ -184,50 +200,8 @@ const Serviceformen = () => {
   const [addedItems, setAddedItems] = useState({});
   const navigate = useNavigate();
 
-  // const handleAdd = (itempromax, index) => {
-
-  //   // console.log("ITEMPROMAX", itempromax);
-
-  //   let addtheitem = filteredIMGDATA.map((itemmm, i) => {
-  //     return itemmm;
-  //   });
-
-  //   if (addtheitem[index].isadded === "add") {
-  //     addtheitem[index].isadded = "Added";
-  //   }
-  //   if (addtheitem[index].isadded === "Added") {
-  //     addtheitem[index].isadded = "add";
-  //   }
-
-  //   console.log("ADDEDDD OR NOT", addtheitem[index].isadded);
-
-  //   setAddedItems((prevState) => ({
-  //     ...prevState,
-  //     [index]: !prevState[index], // Toggle the state for the item
-  //   }));
-  //   if (addedItems[index] == true) {
-  //     console.log("TRUTHY");
-  //     const x = selectedService.filter((v) => {
-  //       return itempromax._id !== v._id;
-  //     });
-
-  //     console.log("not add bro", x);
-  //     setselectedservice(x);
-  //     console.log("SS", selectedService);
-  //   } else {
-  //     const newArray = [...selectedService, itempromax];
-  //     // console.log("NEWARRAY", newArray);
-  //     setselectedservice((prevState) => ({
-  //       ...prevState,
-  //       newArray,
-  //     }));
-  //     setselectedservice(newArray);
-  //     // console.log("Selected SERvICE", selectedService);
-  //   }
-  // };
-
   const handleAdd = (itempromax, index) => {
-    // Toggle isadded property in filteredIMGDATA
+    // console.log("ADDED ITMEM chheck", itempromax);
     const updatedFilteredIMGDATA = filteredIMGDATA.map((item, i) => {
       if (i === index) {
         item.isadded = item.isadded === "add" ? "Added" : "add";
@@ -237,19 +211,16 @@ const Serviceformen = () => {
 
     setAddedItems((prevState) => ({
       ...prevState,
-      // [index]: prevState[index], // Toggle the state for the item
       [index]: prevState[index],
     }));
 
     if (addedItems[index] == true) {
-      console.log("TRUTHY");
+      // console.log("TRUTHY");
       const x = selectedService.filter((v) => {
         return itempromax._id !== v._id;
       });
-
-      // console.log("not add bro", x);
       setselectedservice(x);
-      console.log("SS", selectedService);
+      // console.log("SS", selectedService);
     } else {
       setTotalItems(selectedService.length + 1);
       setTotaltime((prevtime) => prevtime + itempromax.timevalue);
@@ -260,53 +231,50 @@ const Serviceformen = () => {
 
       y.push(itempromax);
 
-      console.log(itempromax.isadded);
+      // console.log(itempromax.isadded);
       if (itempromax.isadded === "add") {
-        console.log("CRINGE");
+        // console.log("CRINGE");
         setTotaltime((prevtime) => prevtime - itempromax.timevalue);
         setTotalItems(selectedService.length);
         setTotalAmount((prevamount) => prevamount - itempromax.amount);
-        console.log(totalItems);
+        // console.log(totalItems);
       }
       if ((itempromax.isadded = "Added")) {
         console.log("SDFSDFS");
       }
 
-      // let minutesValue = parseInt(itempromax.timevalue);
-      // let hoursValue = Math.floor(minutesValue / 60);
-      // let remainingMinutesValue = minutesValue % 60;
-
-      // console.log(
-      //   "HOURS VALUE + MINUTES VALUE",
-      //   hoursValue,
-      //   remainingMinutesValue
-      // );
-
-      // setTotaltime(itempromax.timevalue);
-      // setHours(hoursValue);
-      // setRemainingMinutes(remainingMinutesValue);
-      // setTotalItems(selectedService.length + 1);
-
       setselectedservice(y);
 
-      // const tItems =selectedService.reduce((acc,single,isingle)=>{
-
-      // })
-
-      // if (totalItems === selectedService.length) {
-      //   console.log("MATCHsdfsdfsdfsdfsdfsdfsdfsd");
-
-      //   const msd = totalAmount - 1;
-      //   setTotalItems(msd);
-      // }
-      // console.log("tItems", totalItems);
-
-      console.log(" yitem._id===itempromax._id", y);
+      // console.log(" yitem._id===itempromax._id", y);
     }
     setFiltereImgDat(updatedFilteredIMGDATA);
   };
 
   const handleselectstylish = () => {
+    const someTempvar = wholeDataREDUX;
+    // console.log("wholeDataREDUX", wholeDataREDUX);
+
+    dispatch(
+      wholedatacredentials({
+        data: {
+          saloondetails: someTempvar.data.saloondetails,
+          servicedetails: {
+            headingpassedfromsaloon: headingpassedfromsaloon,
+            selectedService: selectedService,
+          },
+          stylishdetails: someTempvar.data.stylishdetails,
+        },
+      })
+    );
+
+    // navigate("/selectstylishwomen", {
+    //   state: {
+    //     headingpassedfromsaloon: headingpassedfromsaloon,
+    //     selectedService: selectedService,
+    //   },
+    // });
+
+    //comented now
     navigate("/selectstylishmen");
   };
   return (
@@ -328,49 +296,10 @@ const Serviceformen = () => {
                     fontWeight: "700",
                   }}
                 >
-                  Services for men @ Lakme Salon{" "}
+                  Services for Men @ {headingpassedfromsaloon}
                 </h1>
               </Col>
               <Col className=" col-12 col-md-8 col-lg-6 searchbar">
-                {/* <InputGroup
-                  style={{
-                    height: "50px",
-                    minWidth: "200px",
-                    maxWidth: "480px",
-                    backgroundColor: " rgba(255, 255, 255, 0.1)",
-                    // borderRadius: "25px",
-                    marginBottom: "50px",
-                    // marginTop: "50px",
-                    borderTopLeftRadius: "25px",
-                    borderBottomLeftRadius: "25px",
-                    borderTopRightRadius: "25px",
-                    borderBottomRightRadius: "25px",
-                    // marginLeft: "150px",
-                    boxShadow: "2px 2px 10px 0px #DDDDDD ",
-                  }}
-                >
-                  <Form.Control
-                    type="text"
-                    placeholder="Search for saloons"
-                    style={{
-                      backgroundColor: " rgba(255, 255, 255, 0.1)",
-                      borderTopLeftRadius: "25px",
-                      borderBottomLeftRadius: "25px",
-                    }}
-                  />
-                  <InputGroup.Text
-                    style={{
-                      borderTopRightRadius: "25px",
-                      borderBottomRightRadius: "25px",
-                      color: "white",
-                      background: "black",
-                      paddingLeft: "30px",
-                      paddingRight: "30px",
-                    }}
-                  >
-                    <CiSearch />
-                  </InputGroup.Text>
-                </InputGroup> */}
                 <div>
                   <div
                     className="col-11"
@@ -394,11 +323,11 @@ const Serviceformen = () => {
                     >
                       <ReactSearchBox
                         style={{ paddingTop: "10px" }}
-                        placeholder="Search for saloons"
+                        placeholder="Search for salons"
                         value={searchValue}
                         data={filteredIMGDATA}
                         onChange={(value) => handleSearch(value)}
-                        onSelect={(record) => console.log(record)}
+                        // onSelect={(record) => console.log(record)}
                         rightIcon={<>🎨</>}
                         inputHeight="20px"
                         inputBorderColor="white"
@@ -434,22 +363,6 @@ const Serviceformen = () => {
               borderRadius: "10px",
             }}
           >
-            {/* sdfsdfsdfsdfs++++++++++++++++++++++++++++++++++++++ */}
-            {/* {TYPES.map((item) => (
-              <Row style={{ height: "64px" }}>
-                <Col
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    display: "grid",
-                    borderBottom: " 1px solid rgba(205, 205, 205, 1) ",
-                  }}
-                  className="catorgoriescolumn"
-                >
-                  <h4 style={{ fontSize: "20px" }}>{item}</h4>
-                </Col>
-              </Row>
-            ))} */}
             {serviceTypes.length > 0 &&
               serviceTypes.map((item, index) => (
                 <Row
@@ -473,125 +386,6 @@ const Serviceformen = () => {
         </Col>
         <Col md={10} lg={5}>
           <Container fluid>
-            {/* {AVAILABLESERVICES.map((item) => (
-              <Container
-                fluid
-                style={{
-                  paddingTop: "10px",
-                  paddingLeft: "30px",
-                  paddingBottom: "15px",
-                  border: "1px solid rgba(205, 205, 205, 1)",
-                  borderRadius: "10px",
-
-                  marginBottom: "25px",
-                }}
-              >
-                <Row>
-                  <Col
-                    style={{
-                      display: "grid",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                    md={2}
-                  >
-                    <img
-                      style={{
-                        marginTop: "10px",
-                        maxWidth: "70px",
-                        borderRadius: "10px",
-                      }}
-                      src={item.logo}
-                      alt=""
-                    />
-                  </Col>
-                  <Col
-                    style={{
-                      display: "grid",
-                      alignItems: "center",
-                      justifyContent: "start",
-                    }}
-                    md={9}
-                  >
-                    <Container fluid>
-                      <Row>
-                        <Col className="columnmiddlesecondcont">
-                          <h6
-                            classname="itemdotheheadingmiddle"
-                            style={{
-                              fontFamily: "petrona,serif",
-                              fontWeight: "700",
-                              paddingTop: "10px",
-                              fontSize: "20px",
-                            }}
-                          >
-                            {item.heading}
-                          </h6>
-                          <div className="d-flex  dflexcontmiddle">
-                            <img
-                              src={item.timeimage}
-                              style={{ height: "30px", marginTop: "10px" }}
-                              alt=""
-                            />
-                            <p
-                              style={{
-                                fontFamily: "petrona,serif",
-                                paddingLeft: "10px",
-                                paddingTop: "15px",
-                                fontWeight: "300",
-                                color: "rgba(53, 53, 53, 1)",
-                                fontSize: "15px",
-                              }}
-                            >
-                              {item.time}
-                            </p>
-                            <img
-                              src={item.timeimage}
-                              style={{
-                                height: "30px",
-                                marginTop: "10px",
-                                paddingLeft: "20px",
-                              }}
-                              alt=""
-                            />
-                            <h6
-                              style={{
-                                fontFamily: "poppins,sans-serif",
-                                paddingTop: "17px",
-                                paddingLeft: "10px",
-
-                                fontWeight: "700",
-                                color: "rgba(53, 53, 53, 1)",
-                                fontSize: "18px",
-                              }}
-                            >
-                              {item.money}
-                            </h6>
-                          </div>
-                        </Col>
-                        <Col
-                          style={{
-                            display: "grid",
-                            justifyContent: "center",
-                            alignContent: "center",
-                          }}
-                          md={1}
-                        >
-                          <Button
-                            className="buttonofthesecondcontainer"
-                            style={{ width: "70px" }}
-                            onClick={() => handleAdd(item.id)}
-                          >
-                            {addedItems[item.id] ? "Added" : "Add"}
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Container>
-                  </Col>
-                </Row>
-              </Container>
-            ))} */}
-
             {filteredIMGDATA.length > 0 &&
               filteredIMGDATA.map(function (itempromax, index) {
                 //let username = data.username;
@@ -764,110 +558,6 @@ const Serviceformen = () => {
             >
               <Row>
                 <Col>
-                  {/* {Addedtobebooked.map((item, index) => (
-                    <Container className="singleternarycont">
-                      <Row>
-                        <Col
-                          style={{ padding: "0px" }}
-                          className="col-lg-2 col-2 col-md-2   col-xl-2 itemdotlogocol"
-                        >
-                          <img
-                            style={{ maxHeight: "50px" }}
-                            src={item.logo}
-                            alt=""
-                          />
-                        </Col>
-                        <Col className="col-lg-8 col8 col-sm-8 col-md-8 col-xl-9">
-                          <Container fluid>
-                            <Row>
-                              <Col>
-                                <h6
-                                  style={{
-                                    textAlign: "start",
-                                    fontFamily: "petrona,serif",
-                                    fontWeight: "700",
-                                    fontSize: "19px",
-                                  }}
-                                >
-                                  {item.heading}
-                                </h6>
-                              </Col>
-                            </Row>
-                            <Row style={{ padding: "0px", margin: "0px" }}>
-                              <Col
-                                className="col-6"
-                                style={{
-                                  display: "flex",
-                                  paddingLeft: "20px",
-                                  padding: "0px",
-                                  margin: "0px",
-                                }}
-                              >
-                                <img
-                                  src={item.clockimage}
-                                  style={{
-                                    height: "25px",
-                                  }}
-                                  alt=""
-                                />{" "}
-                                <p
-                                  style={{
-                                    color: "rgba(121, 121, 121, 1)",
-                                    fontFamily: "poppins,sans-serif",
-                                    paddingTop: "2px",
-                                    fontSize: "16px",
-                                    paddingLeft: "10px",
-                                  }}
-                                >
-                                  {item.timing}
-                                </p>
-                              </Col>
-                              <Col
-                                className="col-6"
-                                style={{
-                                  display: "flex",
-                                  paddingLeft: "20px",
-                                  padding: "0px",
-                                  margin: "0px",
-                                }}
-                              >
-                                <img
-                                  src={item.moneyimage}
-                                  style={{
-                                    height: "25px",
-                                  }}
-                                  alt=""
-                                />{" "}
-                                <p
-                                  style={{
-                                    fontFamily: "poppins,sans-serif",
-                                    paddingTop: "2px",
-                                    fontSize: "16px",
-                                    paddingLeft: "10px",
-                                    fontWeight: "700",
-                                    color: "rgba(53, 53, 53, 1)",
-                                  }}
-                                >
-                                  {item.money}
-                                </p>
-                              </Col>
-                            </Row>
-                          </Container>
-                        </Col>
-                        <Col className="  col-lg-1 col-2  col-sm-2 col-md-2  col-xl-1">
-                          <img
-                            style={{
-                              paddingTop: "10px",
-                              paddingRight: "10px",
-                            }}
-                            src={item.closeimage}
-                            alt=""
-                          />
-                        </Col>
-                      </Row>
-                    </Container>
-                  ))} */}
-
                   {selectedService.length > 0 &&
                     selectedService.map(function (itempromax, index) {
                       //let username = data.username;
@@ -1089,842 +779,3 @@ const Serviceformen = () => {
 };
 
 export default Serviceformen;
-
-// import React, { useEffect, useState } from "react";
-// import { Container, Row, Col, InputGroup, Form, Button } from "react-bootstrap";
-// import { CiSearch } from "react-icons/ci";
-// import "./styles/Serviceformen.css";
-
-// import { useNavigate } from "react-router-dom";
-
-// import Navbarofthesaloon from "./ui-components/Navbarofthesaloon";
-// import Footer from "./ui-components/Footer";
-// import { AVAILABLESERVICES, TYPES } from "./Resources/ServiceformenDummy";
-// import { Addedtobebooked } from "./Resources/Addedtobebooked";
-// import { STYLISHMENDETAILS } from "./Resources/SelectStylishMenDummy";
-// import clock from "./assets/clock.png";
-// import moneyimage from "./assets/moneyimage.png";
-// import close from "./assets/close.png";
-
-// import axios from "axios";
-// const Serviceformen = () => {
-//   const [selectedService, setselectedservice] = useState([]);
-//   const [serviceTypes, setserviceTypes] = useState("");
-//   const [serIMGandDATAS, SetservIMGandDATAS] = useState("");
-//   const [filteredIMGDATA, setFiltereImgDat] = useState("");
-//   const [closedID, setClosedID] = useState("");
-//   const [wholeData, setwholedata] = useState({
-//     HAIRCUT: false,
-//     HAIRCOLOUR: false,
-//     BEARD: false,
-//     FACIAL: false,
-//     GROOMPACKAGES: false,
-//   });
-//   const fetchData = async () => {
-//     try {
-//       const response = await axios.get(
-//         "http://127.0.0.1:5000/serviceformenimageroute/data"
-//       );
-//       // const response44 = await axios.post(
-//       //   "http://127.0.0.1:5000/serviceformenimageroute/data"
-//       // );
-//       const response2 = await axios.get(
-//         "http://127.0.0.1:5000/serviceformenimageroute/images"
-//       );
-
-//       setserviceTypes(response.data.saloonformen);
-//       SetservIMGandDATAS(response2.data.saloonformen);
-//       setFiltereImgDat(response2.data.saloonformen);
-//       console.log("response from the backend", response.data.saloonformen);
-//     } catch (error) {
-//       console.error("Error fetching data:", error);
-//     }
-//   };
-
-//   const handleclosebuttonclick = (itempromax) => {
-//     const x = selectedService.filter((item) => {
-//       return item._id !== itempromax._id;
-//     });
-//     setClosedID(x);
-//     setselectedservice(x);
-//     console.log("xxxxxxxxxx", x);
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-//   useEffect(() => {
-//     typesmapfuncwrapper();
-//     // console.log("serviceTypes", serviceTypes);
-
-//     // console.log("serIMGandDATAS", serIMGandDATAS);
-//   }, [serviceTypes, serIMGandDATAS]);
-//   useEffect(() => {
-//     console.log("Closed", closedID);
-//   }, [closedID]);
-
-//   const typesmapfuncwrapper = () => {
-//     if (serviceTypes) {
-//       const c = serviceTypes.map((item) => {
-//         // console.log("ITEM", item);
-//       });
-//       // console.log("serIMGandDATAS", serIMGandDATAS);
-//     }
-//   };
-//   const handleTypesclick = (item) => {
-//     // console.log("ITEMSSSSSSS", item);
-//     setwholedata((prevState) => ({
-//       ...prevState,
-//       [item]: true,
-//     }));
-//     // serIMGandDATAS SetservIMGandDATAS
-//     const x = serIMGandDATAS.map((mapsingle) => {
-//       // console.log("ROLESON,", mapsingle.style);
-//       // console.log("sheji,", item);
-//       // mapsingle.style===
-//     });
-//     const y = serIMGandDATAS.filter((filteredPARAM) => {
-//       // console.log("FILTEREDPARAM", filteredPARAM);
-//       return filteredPARAM.style === item;
-//     });
-//     // console.log("y", y);
-//     setFiltereImgDat(y);
-//     // console.log("FilteredimgDAT", filteredIMGDATA);
-//     // SetservIMGandDATAS(y);
-//     // console.log("serIMGandDATAS", serIMGandDATAS);
-//     // SetservIMGandDATAS(y);
-//     // console.log("hello bro serIMGandDATAS", serIMGandDATAS);
-//     // console.log("wholedata", wholeData);
-//   };
-
-//   const [addedItems, setAddedItems] = useState({});
-//   const navigate = useNavigate();
-
-//   const handleAdd = (itempromax, index) => {
-//     // console.log("ITEMPROMAX", itempromax);
-
-//     setAddedItems((prevState) => ({
-//       ...prevState,
-//       [index]: !prevState[index], // Toggle the state for the item
-//     }));
-//     if (addedItems[index] == true) {
-//       console.log("TRUTHY");
-//       const x = selectedService.filter((v) => {
-//         return itempromax._id !== v._id;
-//       });
-
-//       console.log("not add bro", x);
-//       setselectedservice(x);
-//       console.log("SS", selectedService);
-//     } else {
-//       const newArray = [...selectedService, itempromax];
-//       // console.log("NEWARRAY", newArray);
-//       setselectedservice((prevState) => ({
-//         ...prevState,
-//         newArray,
-//       }));
-//       setselectedservice(newArray);
-//       // console.log("Selected SERvICE", selectedService);
-//     }
-//   };
-
-//   const handleselectstylish = () => {
-//     navigate("/selectstylishmen");
-//   };
-//   return (
-//     <Container fluid style={{ position: "relative" }}>
-//       <Row>
-//         <Col>
-//           <Navbarofthesaloon backgroundcolor="black" color="white" />
-//         </Col>
-//       </Row>
-//       <Row>
-//         <Col>
-//           <Container style={{ marginTop: "50px" }}>
-//             <Row>
-//               <Col className=" col-12 col-md-8 col-lg-6">
-//                 <h1
-//                   style={{
-//                     fontFamily: "Petrona, serif",
-//                     color: "rgba(53, 53, 53, 1)",
-//                     fontWeight: "700",
-//                   }}
-//                 >
-//                   Services for men @ Lakme Salon{" "}
-//                 </h1>
-//               </Col>
-//               <Col className=" col-12 col-md-8 col-lg-6 searchbar">
-//                 <InputGroup
-//                   style={{
-//                     height: "50px",
-//                     minWidth: "200px",
-//                     maxWidth: "480px",
-//                     backgroundColor: " rgba(255, 255, 255, 0.1)",
-//                     // borderRadius: "25px",
-//                     marginBottom: "50px",
-//                     // marginTop: "50px",
-//                     borderTopLeftRadius: "25px",
-//                     borderBottomLeftRadius: "25px",
-//                     borderTopRightRadius: "25px",
-//                     borderBottomRightRadius: "25px",
-//                     // marginLeft: "150px",
-//                     boxShadow: "2px 2px 10px 0px #DDDDDD ",
-//                   }}
-//                 >
-//                   <Form.Control
-//                     type="text"
-//                     placeholder="Search for saloons"
-//                     style={{
-//                       backgroundColor: " rgba(255, 255, 255, 0.1)",
-//                       borderTopLeftRadius: "25px",
-//                       borderBottomLeftRadius: "25px",
-//                     }}
-//                   />
-//                   <InputGroup.Text
-//                     style={{
-//                       borderTopRightRadius: "25px",
-//                       borderBottomRightRadius: "25px",
-//                       color: "white",
-//                       background: "black",
-//                       paddingLeft: "30px",
-//                       paddingRight: "30px",
-//                     }}
-//                   >
-//                     <CiSearch />
-//                   </InputGroup.Text>
-//                 </InputGroup>
-//               </Col>
-//             </Row>
-//           </Container>
-//         </Col>
-//       </Row>
-//       <Row className="rowofthemain">
-//         <Col md={10} lg={3}>
-//           <Container
-//             style={{
-//               border: "1px solid rgba(205, 205, 205, 1)  ",
-//               borderRadius: "10px",
-//             }}
-//           >
-//             {/* sdfsdfsdfsdfs++++++++++++++++++++++++++++++++++++++ */}
-//             {/* {TYPES.map((item) => (
-//               <Row style={{ height: "64px" }}>
-//                 <Col
-//                   style={{
-//                     justifyContent: "center",
-//                     alignItems: "center",
-//                     display: "grid",
-//                     borderBottom: " 1px solid rgba(205, 205, 205, 1) ",
-//                   }}
-//                   className="catorgoriescolumn"
-//                 >
-//                   <h4 style={{ fontSize: "20px" }}>{item}</h4>
-//                 </Col>
-//               </Row>
-//             ))} */}
-//             {serviceTypes.length > 0 &&
-//               serviceTypes.map((item, index) => (
-//                 <Row
-//                   onClick={() => handleTypesclick(item.types)}
-//                   style={{ height: "64px" }}
-//                 >
-//                   <Col
-//                     style={{
-//                       justifyContent: "center",
-//                       alignItems: "center",
-//                       display: "grid",
-//                       borderBottom: " 1px solid rgba(205, 205, 205, 1) ",
-//                     }}
-//                     className="catorgoriescolumn"
-//                   >
-//                     <h4 style={{ fontSize: "20px" }}>{item.types}</h4>
-//                   </Col>
-//                 </Row>
-//               ))}
-//           </Container>
-//         </Col>
-//         <Col md={10} lg={5}>
-//           <Container fluid>
-//             {/* {AVAILABLESERVICES.map((item) => (
-//               <Container
-//                 fluid
-//                 style={{
-//                   paddingTop: "10px",
-//                   paddingLeft: "30px",
-//                   paddingBottom: "15px",
-//                   border: "1px solid rgba(205, 205, 205, 1)",
-//                   borderRadius: "10px",
-
-//                   marginBottom: "25px",
-//                 }}
-//               >
-//                 <Row>
-//                   <Col
-//                     style={{
-//                       display: "grid",
-//                       alignItems: "center",
-//                       justifyContent: "center",
-//                     }}
-//                     md={2}
-//                   >
-//                     <img
-//                       style={{
-//                         marginTop: "10px",
-//                         maxWidth: "70px",
-//                         borderRadius: "10px",
-//                       }}
-//                       src={item.logo}
-//                       alt=""
-//                     />
-//                   </Col>
-//                   <Col
-//                     style={{
-//                       display: "grid",
-//                       alignItems: "center",
-//                       justifyContent: "start",
-//                     }}
-//                     md={9}
-//                   >
-//                     <Container fluid>
-//                       <Row>
-//                         <Col className="columnmiddlesecondcont">
-//                           <h6
-//                             classname="itemdotheheadingmiddle"
-//                             style={{
-//                               fontFamily: "petrona,serif",
-//                               fontWeight: "700",
-//                               paddingTop: "10px",
-//                               fontSize: "20px",
-//                             }}
-//                           >
-//                             {item.heading}
-//                           </h6>
-//                           <div className="d-flex  dflexcontmiddle">
-//                             <img
-//                               src={item.timeimage}
-//                               style={{ height: "30px", marginTop: "10px" }}
-//                               alt=""
-//                             />
-//                             <p
-//                               style={{
-//                                 fontFamily: "petrona,serif",
-//                                 paddingLeft: "10px",
-//                                 paddingTop: "15px",
-//                                 fontWeight: "300",
-//                                 color: "rgba(53, 53, 53, 1)",
-//                                 fontSize: "15px",
-//                               }}
-//                             >
-//                               {item.time}
-//                             </p>
-//                             <img
-//                               src={item.timeimage}
-//                               style={{
-//                                 height: "30px",
-//                                 marginTop: "10px",
-//                                 paddingLeft: "20px",
-//                               }}
-//                               alt=""
-//                             />
-//                             <h6
-//                               style={{
-//                                 fontFamily: "poppins,sans-serif",
-//                                 paddingTop: "17px",
-//                                 paddingLeft: "10px",
-
-//                                 fontWeight: "700",
-//                                 color: "rgba(53, 53, 53, 1)",
-//                                 fontSize: "18px",
-//                               }}
-//                             >
-//                               {item.money}
-//                             </h6>
-//                           </div>
-//                         </Col>
-//                         <Col
-//                           style={{
-//                             display: "grid",
-//                             justifyContent: "center",
-//                             alignContent: "center",
-//                           }}
-//                           md={1}
-//                         >
-//                           <Button
-//                             className="buttonofthesecondcontainer"
-//                             style={{ width: "70px" }}
-//                             onClick={() => handleAdd(item.id)}
-//                           >
-//                             {addedItems[item.id] ? "Added" : "Add"}
-//                           </Button>
-//                         </Col>
-//                       </Row>
-//                     </Container>
-//                   </Col>
-//                 </Row>
-//               </Container>
-//             ))} */}
-
-//             {filteredIMGDATA.length > 0 &&
-//               filteredIMGDATA.map(function (itempromax, index) {
-//                 //let username = data.username;
-//                 // console.log("here!!!", itempromax);
-
-//                 const blob = new Blob(
-//                   [Int8Array.from(itempromax.logo.data.data)],
-//                   {
-//                     type: itempromax.contentType,
-//                   }
-//                 );
-
-//                 const image = window.URL.createObjectURL(blob);
-
-//                 return (
-//                   <Container
-//                     fluid
-//                     style={{
-//                       paddingTop: "10px",
-//                       paddingLeft: "30px",
-//                       paddingBottom: "15px",
-//                       border: "1px solid rgba(205, 205, 205, 1)",
-//                       borderRadius: "10px",
-
-//                       marginBottom: "25px",
-//                     }}
-//                   >
-//                     <Row>
-//                       <Col
-//                         style={{
-//                           display: "grid",
-//                           alignItems: "center",
-//                           justifyContent: "center",
-//                         }}
-//                         md={2}
-//                       >
-//                         <img
-//                           style={{
-//                             marginTop: "10px",
-//                             maxWidth: "70px",
-//                             borderRadius: "10px",
-//                           }}
-//                           src={image}
-//                           alt=""
-//                         />
-//                       </Col>
-//                       <Col
-//                         style={{
-//                           display: "grid",
-//                           alignItems: "center",
-//                           justifyContent: "start",
-//                         }}
-//                         md={9}
-//                       >
-//                         <Container fluid>
-//                           <Row>
-//                             <Col className="columnmiddlesecondcont">
-//                               <h6
-//                                 classname="itemdotheheadingmiddle"
-//                                 style={{
-//                                   fontFamily: "petrona,serif",
-//                                   fontWeight: "700",
-//                                   paddingTop: "10px",
-//                                   fontSize: "20px",
-//                                 }}
-//                               >
-//                                 {itempromax.heading}
-//                               </h6>
-//                               <div className="d-flex  dflexcontmiddle">
-//                                 <img
-//                                   src={clock}
-//                                   style={{ height: "30px", marginTop: "10px" }}
-//                                   alt=""
-//                                 />
-//                                 <p
-//                                   style={{
-//                                     fontFamily: "petrona,serif",
-//                                     paddingLeft: "10px",
-//                                     paddingTop: "15px",
-//                                     fontWeight: "300",
-//                                     color: "rgba(53, 53, 53, 1)",
-//                                     fontSize: "15px",
-//                                   }}
-//                                 >
-//                                   {itempromax.duration}
-//                                 </p>
-//                                 <img
-//                                   src={moneyimage}
-//                                   style={{
-//                                     height: "30px",
-//                                     marginTop: "10px",
-//                                     paddingLeft: "20px",
-//                                   }}
-//                                   alt=""
-//                                 />
-//                                 <h6
-//                                   style={{
-//                                     fontFamily: "poppins,sans-serif",
-//                                     paddingTop: "17px",
-//                                     paddingLeft: "10px",
-
-//                                     fontWeight: "700",
-//                                     color: "rgba(53, 53, 53, 1)",
-//                                     fontSize: "18px",
-//                                   }}
-//                                 >
-//                                   {itempromax.amount}
-//                                 </h6>
-//                               </div>
-//                             </Col>
-//                             <Col
-//                               style={{
-//                                 display: "grid",
-//                                 justifyContent: "center",
-//                                 alignContent: "center",
-//                               }}
-//                               md={1}
-//                             >
-//                               <Button
-//                                 className="buttonofthesecondcontainer"
-//                                 style={{ width: "70px" }}
-//                                 onClick={() => handleAdd(itempromax, index)}
-//                               >
-//                                 {addedItems[index] ? "Added" : "Add"}
-//                               </Button>
-//                             </Col>
-//                           </Row>
-//                         </Container>
-//                       </Col>
-//                     </Row>
-//                   </Container>
-//                 );
-//               })}
-//           </Container>
-//         </Col>
-//         <Col md={10} lg={4}>
-//           <Container
-//             style={{
-//               minHeight: "400px",
-//               marginTop: "0px",
-//               border: "1px solid #CDCDCD",
-//               paddingLeft: "0px",
-//               paddingRight: "0px",
-//             }}
-//             className="ternarycontainer"
-//             fluid
-//           >
-//             <Container className="ternarycsinglecontainer" fluid>
-//               <Row>
-//                 <Col>
-//                   {/* {Addedtobebooked.map((item, index) => (
-//                     <Container className="singleternarycont">
-//                       <Row>
-//                         <Col
-//                           style={{ padding: "0px" }}
-//                           className="col-lg-2 col-2 col-md-2   col-xl-2 itemdotlogocol"
-//                         >
-//                           <img
-//                             style={{ maxHeight: "50px" }}
-//                             src={item.logo}
-//                             alt=""
-//                           />
-//                         </Col>
-//                         <Col className="col-lg-8 col8 col-sm-8 col-md-8 col-xl-9">
-//                           <Container fluid>
-//                             <Row>
-//                               <Col>
-//                                 <h6
-//                                   style={{
-//                                     textAlign: "start",
-//                                     fontFamily: "petrona,serif",
-//                                     fontWeight: "700",
-//                                     fontSize: "19px",
-//                                   }}
-//                                 >
-//                                   {item.heading}
-//                                 </h6>
-//                               </Col>
-//                             </Row>
-//                             <Row style={{ padding: "0px", margin: "0px" }}>
-//                               <Col
-//                                 className="col-6"
-//                                 style={{
-//                                   display: "flex",
-//                                   paddingLeft: "20px",
-//                                   padding: "0px",
-//                                   margin: "0px",
-//                                 }}
-//                               >
-//                                 <img
-//                                   src={item.clockimage}
-//                                   style={{
-//                                     height: "25px",
-//                                   }}
-//                                   alt=""
-//                                 />{" "}
-//                                 <p
-//                                   style={{
-//                                     color: "rgba(121, 121, 121, 1)",
-//                                     fontFamily: "poppins,sans-serif",
-//                                     paddingTop: "2px",
-//                                     fontSize: "16px",
-//                                     paddingLeft: "10px",
-//                                   }}
-//                                 >
-//                                   {item.timing}
-//                                 </p>
-//                               </Col>
-//                               <Col
-//                                 className="col-6"
-//                                 style={{
-//                                   display: "flex",
-//                                   paddingLeft: "20px",
-//                                   padding: "0px",
-//                                   margin: "0px",
-//                                 }}
-//                               >
-//                                 <img
-//                                   src={item.moneyimage}
-//                                   style={{
-//                                     height: "25px",
-//                                   }}
-//                                   alt=""
-//                                 />{" "}
-//                                 <p
-//                                   style={{
-//                                     fontFamily: "poppins,sans-serif",
-//                                     paddingTop: "2px",
-//                                     fontSize: "16px",
-//                                     paddingLeft: "10px",
-//                                     fontWeight: "700",
-//                                     color: "rgba(53, 53, 53, 1)",
-//                                   }}
-//                                 >
-//                                   {item.money}
-//                                 </p>
-//                               </Col>
-//                             </Row>
-//                           </Container>
-//                         </Col>
-//                         <Col className="  col-lg-1 col-2  col-sm-2 col-md-2  col-xl-1">
-//                           <img
-//                             style={{
-//                               paddingTop: "10px",
-//                               paddingRight: "10px",
-//                             }}
-//                             src={item.closeimage}
-//                             alt=""
-//                           />
-//                         </Col>
-//                       </Row>
-//                     </Container>
-//                   ))} */}
-
-//                   {selectedService.length > 0 &&
-//                     selectedService.map(function (itempromax) {
-//                       //let username = data.username;
-//                       // console.log("here!!!", itempromax);
-//                       const blob = new Blob(
-//                         [Int8Array.from(itempromax.logo.data.data)],
-//                         {
-//                           type: itempromax.contentType,
-//                         }
-//                       );
-//                       // console.log(
-//                       //   "YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
-//                       // );
-//                       const image = window.URL.createObjectURL(blob);
-
-//                       return (
-//                         <Container className="singleternarycont">
-//                           <Row>
-//                             <Col
-//                               style={{ padding: "0px" }}
-//                               className="col-lg-2 col-2 col-md-2   col-xl-2 itemdotlogocol"
-//                             >
-//                               <img
-//                                 style={{ maxHeight: "50px" }}
-//                                 src={image}
-//                                 alt=""
-//                               />
-//                             </Col>
-//                             <Col className="col-lg-8 col8 col-sm-8 col-md-8 col-xl-9">
-//                               <Container fluid>
-//                                 <Row>
-//                                   <Col>
-//                                     <h6
-//                                       style={{
-//                                         textAlign: "start",
-//                                         fontFamily: "petrona,serif",
-//                                         fontWeight: "700",
-//                                         fontSize: "19px",
-//                                       }}
-//                                     >
-//                                       {itempromax.heading}
-//                                     </h6>
-//                                   </Col>
-//                                 </Row>
-//                                 <Row style={{ padding: "0px", margin: "0px" }}>
-//                                   <Col
-//                                     className="col-6"
-//                                     style={{
-//                                       display: "flex",
-//                                       paddingLeft: "20px",
-//                                       padding: "0px",
-//                                       margin: "0px",
-//                                     }}
-//                                   >
-//                                     <img
-//                                       src={clock}
-//                                       style={{
-//                                         height: "25px",
-//                                       }}
-//                                       alt=""
-//                                     />{" "}
-//                                     <p
-//                                       style={{
-//                                         color: "rgba(121, 121, 121, 1)",
-//                                         fontFamily: "poppins,sans-serif",
-//                                         paddingTop: "2px",
-//                                         fontSize: "16px",
-//                                         paddingLeft: "10px",
-//                                       }}
-//                                     >
-//                                       {itempromax.duration}
-//                                     </p>
-//                                   </Col>
-//                                   <Col
-//                                     className="col-6"
-//                                     style={{
-//                                       display: "flex",
-//                                       paddingLeft: "20px",
-//                                       padding: "0px",
-//                                       margin: "0px",
-//                                     }}
-//                                   >
-//                                     <img
-//                                       src={moneyimage}
-//                                       style={{
-//                                         height: "25px",
-//                                       }}
-//                                       alt=""
-//                                     />{" "}
-//                                     <p
-//                                       style={{
-//                                         fontFamily: "poppins,sans-serif",
-//                                         paddingTop: "2px",
-//                                         fontSize: "16px",
-//                                         paddingLeft: "10px",
-//                                         fontWeight: "700",
-//                                         color: "rgba(53, 53, 53, 1)",
-//                                       }}
-//                                     >
-//                                       {itempromax.amount}
-//                                     </p>
-//                                   </Col>
-//                                 </Row>
-//                               </Container>
-//                             </Col>
-//                             <Col className="  col-lg-1 col-2  col-sm-2 col-md-2  col-xl-1">
-//                               <img
-//                                 style={{
-//                                   paddingTop: "10px",
-//                                   paddingRight: "10px",
-//                                 }}
-//                                 src={close}
-//                                 alt=""
-//                                 onClick={() =>
-//                                   handleclosebuttonclick(itempromax)
-//                                 }
-//                               />
-//                             </Col>
-//                           </Row>
-//                         </Container>
-//                       );
-//                     })}
-//                 </Col>
-//               </Row>
-//             </Container>
-//             <Container>
-//               <Row
-//                 style={{
-//                   marginBottom: "30px",
-//                   marginTop: "100px",
-//                   borderTop: "1px solid rgba(205, 205, 205, 1)",
-//                   paddingTop: "25px",
-//                 }}
-//               >
-//                 <Col style={{ paddingRight: "0px" }} className="col-2 ">
-//                   <div className="d-flex flex-column">
-//                     <p
-//                       style={{
-//                         fontFamily: "poppins,sans-serif",
-//                         fontWeight: "300",
-//                         fontSize: "10px",
-
-//                         margin: "0px",
-//                       }}
-//                     >
-//                       02 Items
-//                     </p>
-//                     <h6
-//                       style={{
-//                         fontFamily: "poppins,sans-serif",
-//                         fontWeight: "600",
-//                         fontSize: "15px",
-
-//                         margin: "0px",
-//                       }}
-//                     >
-//                       1 hour
-//                     </h6>
-//                   </div>
-//                 </Col>
-//                 <Col
-//                   style={{
-//                     paddingLeft: "10px",
-//                     borderLeft: "2px solid rgba(205, 205, 205, 1)",
-//                   }}
-//                   className="col-3"
-//                 >
-//                   <h6
-//                     style={{
-//                       fontFamily: "poppins,sans-serif",
-//                       fontWeight: "600",
-//                       fontSize: "15px",
-//                       paddingTop: "15px",
-//                       margin: "0px",
-//                     }}
-//                   >
-//                     Rs.350
-//                   </h6>
-//                 </Col>
-//                 <Col className="col-6">
-//                   <Button className="buttonofsecondary ">
-//                     <h6
-//                       style={{
-//                         fontFamily: "poppins,sans-serif",
-//                         fontWeight: "600",
-//                         fontSize: "10px",
-//                         padding: "5px",
-//                         margin: "0px",
-//                       }}
-//                       onClick={handleselectstylish}
-//                     >
-//                       Select Stylish
-//                     </h6>
-//                   </Button>
-//                 </Col>
-//               </Row>
-//             </Container>
-//           </Container>
-//         </Col>
-//       </Row>
-//       <Row>
-//         <Col style={{ marginTop: "300px" }}>
-//           <Footer />
-//         </Col>
-//       </Row>
-//     </Container>
-//   );
-// };
-
-// export default Serviceformen;

@@ -508,7 +508,7 @@ const Selectstylishwomen = () => {
 
   const handleFilterImage = async () => {
     // console.log("Data from the Backend", data);
-    const x = data.filter((item) => item.gender !== "Girls");
+    const x = data.filter((item) => item.gender !== "MALE");
     setfilteredDatapro(x);
   };
   const [onclicktiming, setonclicktiming] = useState(false);
@@ -688,12 +688,33 @@ const Selectstylishwomen = () => {
 
   useEffect(() => {
     handleFilterImage();
+    console.log("data \n \n \n===>", data, "....... \n \n \n");
 
     // Filter data when 'data' state changes
   }, [data]);
+
   useEffect(() => {
     // console.log("FILTERED DATA PROFES", filteredDatapro);
+    setfilterwithsearch(filteredDatapro);
   }, [filteredDatapro]);
+
+  const [searchValue, setSearchValue] = useState("Doe");
+  const [filterwithsearch, setfilterwithsearch] = useState("");
+  const handleSearch = (value) => {
+    setfilterwithsearch(data);
+    setSearchValue(value);
+    // console.log("filteredIMGDATA IN the searCH", filteredIMGDATA);
+
+    const filteredservice = data.filter(
+      (item) =>
+        item.heading.toLowerCase().includes(value.toString().toLowerCase())
+      // console.log("ITEMMMM", item)
+    );
+    setfilterwithsearch(filteredservice);
+  };
+  useEffect(() => {
+    console.log("filterwithsearch", filterwithsearch);
+  }, [filterwithsearch]);
   return (
     <Container fluid>
       <Row>
@@ -716,7 +737,7 @@ const Selectstylishwomen = () => {
                   Select your Stylist{" "}
                 </h1>
               </Col>
-              <div className="  col-lg-6 col-md-8  col-sm-12 col-sm-12 col-12  containerofthesearchbar">
+              {/* <div className="  col-lg-6 col-md-8  col-sm-12 col-sm-12 col-12  containerofthesearchbar">
                 <Col className=" col-lg-8 col-md-10 col-sm-10  col-xs-10  col-10 ">
                   <InputGroup className="inputoftheserchbar">
                     <Form.Control
@@ -729,9 +750,46 @@ const Selectstylishwomen = () => {
                       }}
                     />
                     <InputGroup.Text className="inputgroupdottextofthesearchbar">
-                      <CiSearch />
+                      <div
+                        className="col-10 "
+                        style={{
+                          marginTop: "5px",
+                          paddingLeft: "10px",
+                          paddingBottom: "10px",
+                        }}
+                      >
+                        <ReactSearchBox
+                          style={{ paddingTop: "10px" }}
+                          placeholder="Search for saloons"
+                          data={filteredDatapro}
+                          // value={searchValue}
+                          // onChange={(value) => handleSearch(value)}
+                          // onSelect={(record) => console.log(record)}
+                          rightIcon={<>🎨</>}
+                          inputHeight="20px"
+                          inputBorderColor="white"
+                        />
+                      </div>
+                    </InputGroup.Text>
+                  </InputGroup>
+                </Col>
+              </div> */}
 
-                      {/* <div
+              <Col className=" col-12 col-md-8 col-lg-6 searchbar">
+                <div>
+                  <div
+                    className="col-11"
+                    style={{
+                      display: "flex",
+
+                      borderTopRightRadius: "25px",
+                      borderBottomRightRadius: "25px",
+                      borderTopLeftRadius: "25px",
+                      borderBottomLeftRadius: "25px",
+                      boxShadow: "0px 4px 6px 4px rgba(0, 0, 0, 0.1) ",
+                    }}
+                  >
+                    <div
                       className="col-10 "
                       style={{
                         marginTop: "5px",
@@ -741,20 +799,34 @@ const Selectstylishwomen = () => {
                     >
                       <ReactSearchBox
                         style={{ paddingTop: "10px" }}
-                        placeholder="Search for saloons"
-                        value={searchValue}
-                        data={}
+                        placeholder="Search for salons"
+                        // value={searchValue}
+                        data={filteredDatapro}
                         onChange={(value) => handleSearch(value)}
-                        onSelect={(record) => console.log(record)}
+                        // onSelect={(record) => console.log(record)}
                         rightIcon={<>🎨</>}
                         inputHeight="20px"
                         inputBorderColor="white"
                       />
-                    </div> */}
-                    </InputGroup.Text>
-                  </InputGroup>
-                </Col>
-              </div>
+                    </div>
+
+                    <div
+                      style={{
+                        borderTopRightRadius: "25px",
+                        borderBottomRightRadius: "25px",
+                        color: "white",
+                        background: "black",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      className="col-2"
+                    >
+                      <CiSearch />
+                    </div>
+                  </div>
+                </div>
+              </Col>
             </Row>
           </Container>
         </Col>
@@ -786,8 +858,8 @@ const Selectstylishwomen = () => {
             <Container fluid className="secondarycontainer">
               {/* SECONDARY SINGLE CONTAINER */}
 
-              {filteredDatapro.length > 0 &&
-                filteredDatapro.map(function (item, indexx) {
+              {filterwithsearch.length > 0 &&
+                filterwithsearch.map(function (item, indexx) {
                   const blob = new Blob([Int8Array.from(item.logo.data.data)], {
                     type: item.contentType,
                   });

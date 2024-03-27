@@ -66,7 +66,7 @@ const Saloonsforwomen = () => {
   //   console.log("SALOONNAME TO BE pASSED", saloonnametobepassed);
   // }, [saloonnametobepassed]);
   const onclickonthedispfilter = (item) => {
-    console.log("AFTER CLICK SHOW ITEM", item._id);
+    console.log("AFTER CLICK SHOW ITEM", item);
     // setsaloonnametobepassed(item.heading);
 
     const someTempvar = wholeDataREDUX;
@@ -99,6 +99,8 @@ const Saloonsforwomen = () => {
     //     saloonnameID: item._id,
     //   },
     // });
+
+    //commented now
     navigate("/serviceforwomen");
   };
 
@@ -121,12 +123,12 @@ const Saloonsforwomen = () => {
   };
 
   const handleFilterImage = async () => {
-    console.log("Data from the Backend", data);
+    // console.log("Data from the Backend", data);
+    // console.log("DAAATTAAAAAA", data);
 
-    console.log("DAAATTAAAAAA", data);
-    const x = data.filter((item) => item.gender !== "Girls");
+    const x = data.filter((item) => item.GENDER !== "MALE");
     setfilteredDatapro(x);
-    console.log("FiTLEred X", filteredDatapro);
+    console.log("FiTLEred X", x);
   };
 
   useEffect(() => {

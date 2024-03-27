@@ -273,6 +273,8 @@ const Serviceformen = () => {
     //     selectedService: selectedService,
     //   },
     // });
+
+    //comented now
     navigate("/selectstylishwomen");
   };
   return (

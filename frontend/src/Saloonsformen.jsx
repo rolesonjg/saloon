@@ -16,9 +16,15 @@ import { DATA } from "./Resources/SaloonsformenDummy";
 import axios from "axios";
 import ReactSearchBox from "react-search-box";
 import DisplayData from "./DisplayData";
+import { useDispatch, useSelector } from "react-redux";
+import { wholedatacredentials } from "./Reducers/wholedata";
 const Saloonsformen = () => {
-  const [searchValue, setSearchValue] = useState("Doe");
+  const dispatch = useDispatch();
+  const wholeDataREDUX = useSelector((state) => state.wholedata.value);
 
+  const [saloonnametobepassed, setsaloonnametobepassed] = useState("");
+
+  const [searchValue, setSearchValue] = useState("Doe");
   const data2 = [
     {
       key: "john",
@@ -56,29 +62,36 @@ const Saloonsformen = () => {
     setfilteredDatapro(filteredsaloon);
   };
 
-  const onclickonthedispfilter = () => {
+  // useEffect(() => {
+  //   console.log("SALOONNAME TO BE pASSED", saloonnametobepassed);
+  // }, [saloonnametobepassed]);
+  const onclickonthedispfilter = (item) => {
+    console.log("AFTER CLICK SHOW ITEM", item);
+    // setsaloonnametobepassed(item.heading);
+
+    const someTempvar = wholeDataREDUX;
+    console.log("wholeDataREDUX", wholeDataREDUX);
+
+    // // console.log("wholeDataREDUX", wholeDataREDUX.data[0].saloondetails);
+
+    dispatch(
+      wholedatacredentials({
+        data: {
+          saloondetails: {
+            saloonname: item.heading,
+            saloonnameID: item._id,
+          },
+          servicedetails: someTempvar.data.servicedetails,
+          stylishdetails: someTempvar.data.stylishdetails,
+        },
+      })
+    );
+
+    //commented now
     navigate("/serviceformen");
   };
 
-  const [filteredDatapro, setfilteredDatapro] = useState([
-    // {
-    //   GENDER: "MALE",
-    //   HOURS: "ANYTIME",
-    //   LOCATION: "NAGERCOIL",
-    //   RATINGS: "FIVE",
-    //   closingtime: "Closes 10 pm",
-    //   gender: "Unisex",
-    //   genderimage: "Dsfdfsd",
-    //   heading: "Lakme Salon",
-    //   locationdetails: "locationdetails",
-    //   locationimage: "sdfsdfsd",
-    //   logo: "sdfsdf",
-    //   reviews: "REVIEWS (144)",
-    //   stars: "sdfsdf",
-    //   status: "Open",
-    // },
-  ]);
-
+  const [filteredDatapro, setfilteredDatapro] = useState([]);
   const [dataImagearray, setDataImagearray] = useState([]);
   const [dataImage, setDataImage] = useState([]);
   const [data, setData] = useState([]);
@@ -97,30 +110,14 @@ const Saloonsformen = () => {
   };
 
   const handleFilterImage = async () => {
-    console.log("Data from the Backend", data);
+    // console.log("Data from the Backend", data);
+    // console.log("DAAATTAAAAAA", data);
 
-    // if (data) {
-    //   data.map((x) => {
-    //     console.log("xxx", x);
-    //     const filteredObjects = Object.entries(x)
-    //       .filter(
-    //         ([key, value]) =>
-    //           typeof value === "object" && value.contentType === "image/png"
-    //       )
-    //       .reduce((acc, [key, value]) => {
-    //         acc[key] = value;
-    //         return acc;
-    //       }, {});
-    //     console.log("filteredObjects", filteredObjects);
-    //     setDataImage(filteredObjects);
-    //     console.log("dataImage", dataImage);
-
-    //   });
-    // }
-    console.log("DAAATTAAAAAA", data);
-    const x = data.filter((item) => item.gender !== "Girls");
+    const x = data.filter(
+      (item) => item.GENDER === "MALE" || item.GENDER === "UNISEX"
+    );
     setfilteredDatapro(x);
-    console.log("FiTLEred X", filteredDatapro);
+    console.log("FiTLEred X", x);
   };
 
   useEffect(() => {
@@ -129,43 +126,12 @@ const Saloonsformen = () => {
   }, []);
 
   useEffect(() => {
+    console.log("DATAAA in the sallon bro", data);
     handleFilterImage(); // Filter data when 'data' state changes
   }, [data]);
 
   return (
     <Container fluid>
-      {/* {data.map(function (data) {
-        //let username = data.username;
-        console.log("here!!!");
-        const name = data.name;
-
-        const blob = new Blob([Int8Array.from(data.genderimage.data.data)], {
-          type: data.contentType,
-        });
-        const blob2 = new Blob([Int8Array.from(data.locationimage.data.data)], {
-          type: data.contentType,
-        });
-        const blob3 = new Blob([Int8Array.from(data.logo.data.data)], {
-          type: data.contentType,
-        });
-        const blob4 = new Blob([Int8Array.from(data.stars.data.data)], {
-          type: data.contentType,
-        });
-        const image = window.URL.createObjectURL(blob);
-        const image2 = window.URL.createObjectURL(blob2);
-        const image3 = window.URL.createObjectURL(blob3);
-        const image4 = window.URL.createObjectURL(blob4);
-
-        return (
-          <div className="col-3">
-            <div className="adjust">
-              <div className="image">
-                <img width="300" height="300" src={image}></img>
-              </div>
-            </div>
-          </div>
-        );
-      })} */}
       <div style={{ position: "sticky", top: "0" }}>
         <Navbarofthesaloon backgroundcolor="black" color="white" />
       </div>
@@ -180,47 +146,10 @@ const Saloonsformen = () => {
                 fontWeight: "700",
               }}
             >
-              Saloons for men
+              Salons for Men
             </h1>
           </Col>
           <Col>
-            {/* <InputGroup
-              style={{
-                height: "50px",
-                minWidth: "200px",
-                maxWidth: "480px",
-                backgroundColor: " rgba(255, 255, 255, 0.1)",
-                // borderRadius: "25px",
-                marginBottom: "50px",
-                // marginTop: "50px",
-                borderTopLeftRadius: "25px",
-                borderBottomLeftRadius: "25px",
-                borderTopRightRadius: "25px",
-                borderBottomRightRadius: "25px",
-              }}
-            >
-              <Form.Control
-                type="text"
-                placeholder="Search for saloons"
-                style={{
-                  backgroundColor: " rgba(255, 255, 255, 0.1)",
-                  borderTopLeftRadius: "25px",
-                  borderBottomLeftRadius: "25px",
-                }}
-              />
-              <InputGroup.Text
-                style={{
-                  borderTopRightRadius: "25px",
-                  borderBottomRightRadius: "25px",
-                  color: "white",
-                  background: "black",
-                  paddingLeft: "30px",
-                  paddingRight: "30px",
-                }}
-              >
-                <CiSearch />
-              </InputGroup.Text>
-            </InputGroup> */}
             <div>
               <div
                 className="col-11"
@@ -244,7 +173,7 @@ const Saloonsformen = () => {
                 >
                   <ReactSearchBox
                     style={{ paddingTop: "10px" }}
-                    placeholder="Search for saloons"
+                    placeholder="Search for salons"
                     value={searchValue}
                     data={data}
                     onChange={(value) => handleSearch(value)}
@@ -296,182 +225,10 @@ const Saloonsformen = () => {
           </Col>
           <Col className="col-12 col-lg-9">
             <Container>
-              {/* {DATA.map((item) => (
-                <Container
-                  style={{
-                    // height: "210px",
-                    margin: "0px",
-                    padding: "0px",
-                    paddingTop: "10px",
-                    paddingBottom: "30px",
-                    border: "1px solid rgba(205, 205, 205, 1)",
-                    borderRadius: "15px",
-                    marginTop: "10px",
-                    marginBottom: "20px",
-                  }}
-                  className="displayofthefiltereditems"
-                  onClick={onclickonthedispfilter}
-                >
-                  <Row>
-                    <Col className="col-12 col-lg-3  contitemdotthelogo">
-                      <img
-                        style={{ paddingTop: "18px", paddingLeft: "20px" }}
-                        src={item.logo}
-                        alt=""
-                        className="itemdotthelogo"
-                      />
-                    </Col>
-                    <Col
-                      style={{ paddingLeft: "10px" }}
-                      className="col-12 col-lg-9 colcontaineroftheinnerdisp "
-                    >
-                      {" "}
-                      <h4
-                        style={{
-                          fontFamily: "Petrona, serif",
-                          fontWeight: "700",
-                          fontSize: "30px",
-                          marginBottom: "30px",
-                          paddingTop: "18px",
-                        }}
-                        className="itemdotheheading"
-                      >
-                        {item.heading}
-                      </h4>
-                      <Container
-                        style={{
-                          // border: "1px solid  rgba(205, 205, 205, 1)",
-                          minHeight: "40px",
-                          maxHeight: "100px",
-                          justifyContent: "space-evenly",
-                          alignItems: "end",
-
-                          fontFamily: "Poppins, sans-serif",
-                          fontWeight: "400",
-                          color: "rgba(108, 108, 108, 1)",
-                          // wordWrap: "break-word",
-                          margin: "0px",
-                          padding: "0px",
-                          paddingLeft: "15px",
-                        }}
-                        className="smallcontainerwrap "
-                      >
-                        <Row>
-                          <Col
-                            className="col-6   sm-4 col-lg-4 col-xl-1"
-                            style={{
-                              display: "grid",
-                              justifyContent: "center",
-                              padding: "0px",
-                            }}
-                          >
-                            <h6 style={{ fontSize: "17px" }}>{item.status}</h6>
-                          </Col>
-                          <Col
-                            className="col-6  sm-4  col-lg-4 col-xl-3"
-                            style={{ padding: "0px" }}
-                          >
-                            <h6
-                              style={{ fontSize: "17px", textAlign: "center" }}
-                            >
-                              {item.closingtime}
-                            </h6>
-                          </Col>
-                          <Col
-                            className="col-6  sm-4 col-lg-4 col-xl-3"
-                            style={{ padding: "0px" }}
-                          >
-                            <h6
-                              style={{ textAlign: "center", fontSize: "17px" }}
-                            >
-                              {item.reviews}
-                            </h6>
-                          </Col>
-                          <Col
-                            className="col-6 sm-4 col-lg-5 col-xl-3"
-                            style={{
-                              padding: "0px",
-                              justifyContent: "center",
-                              display: "flex",
-                            }}
-                          >
-                            <img
-                              style={{
-                                height: "20px",
-                                // paddingBottom: "15px",
-                              }}
-                              src={item.stars}
-                              alt=""
-                            />
-                          </Col>
-                          <Col
-                            className="col-6   sm-4 col-lg-3 col-xl-1"
-                            style={{
-                              display: "grid",
-                              justifyContent: "center",
-                              padding: "0px",
-                            }}
-                          >
-                            <img
-                              style={{ height: "30px", paddingBottom: "10px" }}
-                              src={item.genderimage}
-                              alt=""
-                            />
-                          </Col>
-                          <Col
-                            className="col-6  sm-4 col-lg-4 col-xl-1"
-                            style={{ padding: "0px" }}
-                          >
-                            <h6
-                              style={{ textAlign: "center", fontSize: "17px" }}
-                            >
-                              {item.gender}
-                            </h6>
-                          </Col>
-                        </Row>
-                      </Container>
-                      <Container>
-                        <Row
-                          style={{
-                            maxWidth: "650px",
-                            justifyContent: "start",
-                            alignItems: "center",
-                            fontFamily: "Poppins, sans-serif",
-                            fontWeight: "400",
-                            color: "rgba(108, 108, 108, 1)",
-                            marginTop: "25px",
-                          }}
-                          className="d-flex"
-                        >
-                          <Col className="col-1" style={{ padding: "0px" }}>
-                            <img
-                              style={{
-                                paddingBottom: "10px",
-                              }}
-                              src={item.locationimage}
-                              alt=""
-                            />
-                          </Col>
-                          <Col className="colitemdotlocation col-11">
-                            <h6
-                              style={{
-                                textAlign: "start",
-                                fontSize: "13px",
-                              }}
-                            >
-                              {item.locationdetails}
-                            </h6>
-                          </Col>
-                        </Row>
-                      </Container>
-                    </Col>
-                  </Row>
-                </Container>
-              ))} */}
               {filteredDatapro.length > 0 &&
                 filteredDatapro.map(function (item) {
                   //let username = data.username;
-                  console.log("here!!!", item);
+                  // console.log("here!!!", item);
                   const name = data.name;
 
                   const blob = new Blob(
@@ -517,7 +274,7 @@ const Saloonsformen = () => {
                         marginBottom: "20px",
                       }}
                       className="displayofthefiltereditems"
-                      onClick={onclickonthedispfilter}
+                      onClick={() => onclickonthedispfilter(item)}
                     >
                       <Row>
                         <Col className="col-12 col-lg-3  contitemdotthelogo">

@@ -26,6 +26,9 @@ const FilterSaloonMen = (props) => {
   const [ratingsvalue, setRatingsvalue] = useState("FIVE");
   const [hours, setHours] = useState("ANYTIME");
 
+  useEffect(() => {
+    console.log("CUREENT RATING VALue", ratingsvalue);
+  }, [ratingsvalue]);
   const handleFilterGENDER = (newGender) => {
     setGender(newGender);
   };
@@ -72,10 +75,8 @@ const FilterSaloonMen = (props) => {
         item.HOURS === wholestate.HOURS
     );
     // console.log(cringe, "cringe");
-
     props.setfilteredDatapro(cringe);
     console.log("cringe", props.filteredDatapro, "cringe");
-
     console.log("bastard", props.filteredDatapro, "filtersdata");
   };
   const handleUNISEXFILTER = () => {
@@ -132,18 +133,20 @@ const FilterSaloonMen = (props) => {
         item.HOURS === hours
     );
     props.setfilteredDatapro(filteredData);
+    console.log("filterdatatestbor >>> \n", props.filteredDatapro, " \n >>> ");
+    console.log("props.data >>> \n", props.data, " \n >>> ");
   }, [props.data, gender, location, ratingsvalue, hours]);
 
-  useEffect(() => {
-    const filteredData = props.data.filter(
-      (item) =>
-        item.GENDER === gender &&
-        item.LOCATION === location &&
-        item.RATINGS === ratingsvalue &&
-        item.HOURS === hours
-    );
-    props.setfilteredDatapro(filteredData);
-  }, [props.data, gender, location, ratingsvalue, hours]);
+  // useEffect(() => {
+  //   const filteredData = props.data.filter(
+  //     (item) =>
+  //       item.GENDER === gender &&
+  //       item.LOCATION === location &&
+  //       item.RATINGS === ratingsvalue &&
+  //       item.HOURS === hours
+  //   );
+  //   props.setfilteredDatapro(filteredData);
+  // }, [props.data, gender, location, ratingsvalue, hours]);
   return (
     <div>
       <Container

@@ -113,7 +113,7 @@ const Navbarofthesaloon = (props) => {
                   borderBottom: hovered ? "1px solid white" : "",
                   paddingBottom: "10px",
                 }}
-                href="#"
+                href="/"
               >
                 Home
               </a>
@@ -127,7 +127,7 @@ const Navbarofthesaloon = (props) => {
                   borderBottom: hoveredtwo ? "1px solid white" : "",
                   paddingBottom: "10px",
                 }}
-                href="#"
+                href="/myappointments"
               >
                 My Appointments
               </a>
@@ -141,7 +141,7 @@ const Navbarofthesaloon = (props) => {
                   borderBottom: hoveredthree ? "1px solid white" : "",
                   paddingBottom: "10px",
                 }}
-                href="#"
+                href="/mobile"
               >
                 Login{" "}
               </a>
