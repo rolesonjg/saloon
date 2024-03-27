@@ -8,28 +8,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { appointmentsdata } from "./Reducers/appointmentredusers";
 const Mobile = () => {
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
   const appointmentsData = useSelector((state) => state.appointments.value);
   useEffect(() => {
     console.log("APPOIntments", appointmentsData);
+    //commented now
+    // if (
+    //   appointmentsData &&
+    //   Object.keys(appointmentsData.data.confirmappointmentdetails).length === 0
+    // ) {
+    //   alert("Select an appoointmentfirst");
+    //   console.log("Appointmentssssssss", appointmentsData);
+    //   navigate("/saloonsforwomen");
+    // } else {
+    //   // alert(" REDux vALue for sure");
+    //   console.log(
+    //     "appointmentsData.data.confirmappointmentdetails",
+    //     appointmentsData.data.confirmappointmentdetails
+    //   );
+    // }
     if (
       appointmentsData &&
       Object.keys(appointmentsData.data.confirmappointmentdetails).length === 0
     ) {
-      alert("THERE IS NO REDux vALue");
-      console.log("Appointmentssssssss", appointmentsData);
-      navigate("/saloonsforwomen");
+      alert("Select an appoointmentfirst");
     } else {
-      alert(" REDux vALue for sure");
-      console.log(
-        "appointmentsData.data.confirmappointmentdetails",
-        appointmentsData.data.confirmappointmentdetails
-      );
+      // alert(" REDux vALue for sure");
     }
   }, [appointmentsData]);
-  const location = useLocation();
 
+  const location = useLocation();
   const confirmappointmentdetails = appointmentsData.confirmappointmentdetails;
   // useEffect(() => {
   //   console.log("location.state", confirmappointmentdetails);

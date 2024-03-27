@@ -71,17 +71,13 @@ router.use(cors());
 //   }
 // });
 
-
-
-
-
-
 router.post('/data', async (req, res, next) => {
   try { 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true);
+    
     const {IDoftheitem,date, selectedbuttons,email,phonenumber} = req.body;
     console.log(" req.body", req.body)
         // console.log("request dot body",req.body);
@@ -134,31 +130,16 @@ router.post('/data', async (req, res, next) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
 router.get('/data', async (req, res, next) => {
     const allData = await selectedbutton.find()
     res.json({selectedbuttons:allData})
   });
 
  router.post('/data/alreadybooked', async (req, res, next) => {
-
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true);
- 
-
-
     try { 
       const {IDoftheitem,date, selectedbuttons} = req.body;
       const QUeried = await selectedbutton.find({IDoftheitem,date})

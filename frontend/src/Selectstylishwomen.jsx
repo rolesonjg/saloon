@@ -48,6 +48,10 @@ const filteredFemaleStylishMen = STYLISHMENDETAILS.filter(
   (person) => person.gender === "female"
 );
 const Selectstylishwomen = () => {
+  const [termschecktoggle, setermschecktoggle] = useState(false);
+  const handletermscheck = () => {
+    setermschecktoggle(!termschecktoggle);
+  };
   const dispatch = useDispatch();
   const wholeDataREDUX = useSelector((state) => state.wholedata.value);
   const acutualappointmentdata = useSelector(
@@ -118,7 +122,11 @@ const Selectstylishwomen = () => {
             },
           })
         );
-        navigate("/mobile");
+        if (termschecktoggle === true) {
+          navigate("/mobile");
+        } else {
+          alert("Click the Terms and condition");
+        }
       }
     }
   }, [alldetailstoappoint]);
@@ -270,7 +278,6 @@ const Selectstylishwomen = () => {
         totaltime: totalTime,
         totalamount: totalAmount,
       });
-      alert("GOING to mobile");
 
       // if (alldetailstoappoint.dateofappointment.length > 0) {
       //   alert("Success if its alerts the first time");
@@ -1414,7 +1421,7 @@ const Selectstylishwomen = () => {
                   }}
                 >
                   <Col className="col-1">
-                    <input type="checkbox" />
+                    <input onClick={handletermscheck} type="checkbox" />
                   </Col>
                   <Col className="col-10">
                     <p>

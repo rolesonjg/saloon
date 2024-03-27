@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
+require('dotenv').config();
 
-
-mongoose.connect("mongodb+srv://rolesonbookstore:tennisbat@cluster0.ndqpz8q.mongodb.net/?retryWrites=true&w=majority", {
+mongoose.connect(process.env.MONGODB_CONNECTION, {
     dbName: 'saloon'
 })
     .then(() => {

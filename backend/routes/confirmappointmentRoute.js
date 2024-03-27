@@ -24,40 +24,51 @@ router.get("/",async (req, res) => {
 
   
   router.post('/', async (req, res, next) => {
-    try { 
-      const newAppointment = confirmappointment({
-      dateofappointment: req.body.dateofappointment, 
-      numberofitems:req.body.numberofitems,
-      salonname:req.body.salonname,
-      selectedbuttonsdetails:{
-        IDoftheitem:req.body.selectedbuttonsdetails.IDoftheitem,
-        date:req.body.selectedbuttonsdetails.date,
-        selectedbuttons:req.body.selectedbuttonsdetails.selectedbuttons
-      },
-      selectedservice:req.body.selectedservice,
-      stylishname:req.body.stylishname,  
-      timeofappointment:req.body.timeofappointment,   
-      timevalue:req.body.timevalue,
-      totalamount:req.body.totalamount,
-      totaltime:req.body.totaltime,  
-      userdetails:{
-        email:req.body.userdetails.email,
-        gender:req.body.userdetails.gender,
-        name:req.body.userdetails.name,
-        phonenumber:req.body.userdetails.phonenumber
-    } 
-      })
-      await newAppointment.save();    
-        const token = createSecretToken(req.body.userdetails.email,req.body.userdetails.phonenumber);
-      res.cookie("token", token, {
-        withCredentials: true,
-        httpOnly: false,
-      });
-      // console.log("newAppointment",newAppointment)
-       res.status(201).json({ message:"I think it worked",token:token,newAppointment:newAppointment,isappointmentadded:true})
+console.log("REquest.body",req.body)
+    if ((req.body.selectedbuttonsdetails) === null){
+      const token = createSecretToken(req.body.userdetails.email,req.body.userdetails.phonenumber);
+        res.cookie("token", token, {
+          withCredentials: true,
+          httpOnly: false,
+        })
+        res.status(201).json({ message:"Return only the token",token:token,isappointmentadded:false})
+    }
+    else{
+      try { 
+        const newAppointment = confirmappointment({
+        dateofappointment: req.body.dateofappointment, 
+        numberofitems:req.body.numberofitems,
+        salonname:req.body.salonname,
+        selectedbuttonsdetails:{
+          IDoftheitem:req.body.selectedbuttonsdetails.IDoftheitem,
+          date:req.body.selectedbuttonsdetails.date,
+          selectedbuttons:req.body.selectedbuttonsdetails.selectedbuttons
+        },
+        selectedservice:req.body.selectedservice,
+        stylishname:req.body.stylishname,  
+        timeofappointment:req.body.timeofappointment,   
+        timevalue:req.body.timevalue,
+        totalamount:req.body.totalamount,
+        totaltime:req.body.totaltime,  
+        userdetails:{
+          email:req.body.userdetails.email,
+          gender:req.body.userdetails.gender,
+          name:req.body.userdetails.name,
+          phonenumber:req.body.userdetails.phonenumber
       } 
-    catch (error) {
-      console.error(error);
+        })
+        await newAppointment.save();    
+          const token = createSecretToken(req.body.userdetails.email,req.body.userdetails.phonenumber);
+        res.cookie("token", token, {
+          withCredentials: true,
+          httpOnly: false,
+        });
+        // console.log("newAppointment",newAppointment)
+         res.status(201).json({ message:"I think it worked",token:token,newAppointment:newAppointment,isappointmentadded:true})
+        } 
+      catch (error) {
+        console.error(error);
+      }
     }
  });
 

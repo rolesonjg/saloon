@@ -30,30 +30,30 @@ const Validateotp = () => {
       appointmentsData.data.confirmappointmentdetails
     );
 
-    if (
-      appointmentsData &&
-      (Object.keys(appointmentsData.data.confirmappointmentdetails).length ===
-        0 ||
-        Object.keys(appointmentsData.data.userdetails).length === 0)
-    ) {
-      console.log(
-        "NO REDux vALue",
-        appointmentsData.data.confirmappointmentdetails
-      );
-      console.log("NO REDux vALue", appointmentsData.data.userdetails);
+    // if (
+    //   appointmentsData &&
+    //   (Object.keys(appointmentsData.data.confirmappointmentdetails).length ===
+    //     0 ||
+    //     Object.keys(appointmentsData.data.userdetails).length === 0)
+    // ) {
+    //   console.log(
+    //     "NO REDux vALue",
+    //     appointmentsData.data.confirmappointmentdetails
+    //   );
+    //   console.log("NO REDux vALue", appointmentsData.data.userdetails);
 
-      navigate("/saloonsforwomen");
-    } else {
-      console.log(
-        "REDux vALue for sure",
-        appointmentsData.data.confirmappointmentdetails
-      );
-      console.log("REDux vALue for sure", appointmentsData.data.userdetails);
-      // console.log(
-      //   "appointmentsData.data.confirmappointmentdetails",
-      //   appointmentsData.data.confirmappointmentdetails
-      // );
-    }
+    //   navigate("/saloonsforwomen");
+    // } else {
+    //   console.log(
+    //     "REDux vALue for sure",
+    //     appointmentsData.data.confirmappointmentdetails
+    //   );
+    //   console.log("REDux vALue for sure", appointmentsData.data.userdetails);
+    //   // console.log(
+    //   //   "appointmentsData.data.confirmappointmentdetails",
+    //   //   appointmentsData.data.confirmappointmentdetails
+    //   // );
+    // }
   }, [appointmentsData]);
   const w = appointmentsData.data.confirmappointmentdetails;
   // console.log("appointmentsData.confirmappointmentdetails", w.length);
@@ -105,40 +105,13 @@ const Validateotp = () => {
   }, [otp]);
 
   const PostbuttonDATA = async () => {
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:5000/selectedbuttons/data",
-        {
-          IDoftheitem:
-            totaldetails.confirmappointmentdetails.selectedbuttonsdetails
-              .IDoftheitem,
-          date: totaldetails.confirmappointmentdetails.selectedbuttonsdetails
-            .date,
-          selectedbuttons:
-            totaldetails.confirmappointmentdetails.selectedbuttonsdetails
-              .selectedbuttons,
-          email: totaldetails.userdetails.email,
-          phonenumber: parseInt(totaldetails.userdetails.phonenumber),
-        },
-        {}
-      );
-      console.log("SUCESSFULLY POSTED DATA CONFIRM", response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const Postappointments = async () => {
-    console.log("TOTAL DETAILS", totaldetails);
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:5000/confirmappointment/",
-        {
-          dateofappointment:
-            totaldetails.confirmappointmentdetails.dateofappointment,
-          numberofitems: totaldetails.confirmappointmentdetails.numberofitems,
-          salonname: totaldetails.confirmappointmentdetails.salonname,
-          selectedbuttonsdetails: {
+    if (Object.keys(totaldetails.confirmappointmentdetails).length === 0) {
+      console.log("DIDNT POST ThE sELECteD ButTONS0");
+    } else {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:5000/selectedbuttons/data",
+          {
             IDoftheitem:
               totaldetails.confirmappointmentdetails.selectedbuttonsdetails
                 .IDoftheitem,
@@ -147,37 +120,108 @@ const Validateotp = () => {
             selectedbuttons:
               totaldetails.confirmappointmentdetails.selectedbuttonsdetails
                 .selectedbuttons,
-          },
-          selectedservice:
-            totaldetails.confirmappointmentdetails.selectedservice,
-          stylishname: totaldetails.confirmappointmentdetails.stylishname,
-          timeofappointment:
-            totaldetails.confirmappointmentdetails.timeofappointment,
-          timevalue: totaldetails.confirmappointmentdetails.timevalue,
-          totalamount: totaldetails.confirmappointmentdetails.totalamount,
-          totaltime: totaldetails.confirmappointmentdetails.totaltime,
-          userdetails: {
             email: totaldetails.userdetails.email,
-            gender: totaldetails.userdetails.gender,
-            name: totaldetails.userdetails.name,
-            phonenumber: totaldetails.userdetails.phonenumber,
+            phonenumber: parseInt(totaldetails.userdetails.phonenumber),
           },
-        },
-        {}
-      );
-      // console.log("RES", response.data);
-      if (response.data.token) {
-        console.log("rESSSSSPONSE..DATAAAAAA", response.data);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem(
-          "isappointmentadded",
-          response.data.isappointmentadded
+          {}
         );
-
-        navigate("/myappointments");
+        console.log("SUCESSFULLY POSTED DATA CONFIRM", response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    }
+  };
+
+  const Postappointments = async () => {
+    if (Object.keys(totaldetails.confirmappointmentdetails).length === 0) {
+      console.log("totaldetails", totaldetails);
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:5000/confirmappointment/",
+          {
+            dateofappointment: null,
+            numberofitems: null,
+            salonname: null,
+            selectedbuttonsdetails: null,
+            selectedservice: null,
+            stylishname: null,
+            timeofappointment: null,
+            timevalue: null,
+            totalamount: null,
+            totaltime: null,
+            userdetails: {
+              email: totaldetails.userdetails.email,
+              gender: totaldetails.userdetails.gender,
+              name: totaldetails.userdetails.name,
+              phonenumber: totaldetails.userdetails.phonenumber,
+            },
+          },
+          {}
+        );
+        // console.log("RES", response.data);
+        if (response.data.token) {
+          console.log("rESSSSSPONSE..DATAAAAAA", response.data);
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem(
+            "isappointmentadded",
+            response.data.isappointmentadded
+          );
+
+          navigate("/myappointments");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    } else {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:5000/confirmappointment/",
+          {
+            dateofappointment:
+              totaldetails.confirmappointmentdetails.dateofappointment,
+            numberofitems: totaldetails.confirmappointmentdetails.numberofitems,
+            salonname: totaldetails.confirmappointmentdetails.salonname,
+            selectedbuttonsdetails: {
+              IDoftheitem:
+                totaldetails.confirmappointmentdetails.selectedbuttonsdetails
+                  .IDoftheitem,
+              date: totaldetails.confirmappointmentdetails
+                .selectedbuttonsdetails.date,
+              selectedbuttons:
+                totaldetails.confirmappointmentdetails.selectedbuttonsdetails
+                  .selectedbuttons,
+            },
+            selectedservice:
+              totaldetails.confirmappointmentdetails.selectedservice,
+            stylishname: totaldetails.confirmappointmentdetails.stylishname,
+            timeofappointment:
+              totaldetails.confirmappointmentdetails.timeofappointment,
+            timevalue: totaldetails.confirmappointmentdetails.timevalue,
+            totalamount: totaldetails.confirmappointmentdetails.totalamount,
+            totaltime: totaldetails.confirmappointmentdetails.totaltime,
+            userdetails: {
+              email: totaldetails.userdetails.email,
+              gender: totaldetails.userdetails.gender,
+              name: totaldetails.userdetails.name,
+              phonenumber: totaldetails.userdetails.phonenumber,
+            },
+          },
+          {}
+        );
+        // console.log("RES", response.data);
+        if (response.data.token) {
+          console.log("rESSSSSPONSE..DATAAAAAA", response.data);
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem(
+            "isappointmentadded",
+            response.data.isappointmentadded
+          );
+
+          navigate("/myappointments");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     }
   };
 
@@ -189,10 +233,10 @@ const Validateotp = () => {
   const handlevalidate = () => {
     // navigate("/myappointments");
     if (isvalidate === true) {
-      alert("True bro");
+      alert("Otp successfully validated");
       Postappointments();
     } else {
-      alert("NOt validated bro");
+      alert("Invalid Otp");
     }
   };
   // useEffect(()=>{

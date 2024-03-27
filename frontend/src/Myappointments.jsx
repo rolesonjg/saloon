@@ -25,6 +25,8 @@ import reviewon from "./assets/reviewon.png";
 import reviewoff from "./assets/reviewoff.png";
 // var jwt = require("jsonwebtoken");
 const Myappointments = () => {
+  const [emptyappointstoggle, setemptyappointmentstoggle] = useState(false);
+
   const [showAlert, setShowAlert] = useState(false);
 
   const handleShowAlert = () => {
@@ -217,17 +219,20 @@ const Myappointments = () => {
           // console.log("The date is in the future.", inputDate);
         }
       });
-    console.log("RESPONSE", responsefrombackend);
+    console.log("esponsefrombackend", responsefrombackend);
   }, [responsefrombackend]);
 
   useEffect(() => {
     // console.log("deletedite", deletedite);
   }, [deletedite]);
 
+  useEffect(() => {
+    console.log("emptyappointstoggle", emptyappointstoggle);
+  }, [emptyappointstoggle]);
   const sendTokentoverify = async (otp) => {
     const storedToken = localStorage.getItem("token");
     if (!storedToken) {
-      alert("THERE IS no TOKEN BRO");
+      // alert("THERE IS no TOKEN ");
       navigate("/mobile");
     }
     if (storedToken) {
@@ -241,6 +246,17 @@ const Myappointments = () => {
 
       // console.log("RESPONSE FORM VEERIFY TOKEN", response);
       setresponsefrombackend(response.data.userdata);
+
+      if (responsefrombackend && responsefrombackend.email !== null) {
+        console.log("Data is present:", responsefrombackend);
+        // alert("YES");
+        setemptyappointmentstoggle(false);
+      } else {
+        // Handle case where data is empty or undefined;
+        setemptyappointmentstoggle(true);
+        // alert("NO");
+        console.log("No data available.");
+      }
     } else {
       alert("Login session expired");
     }
@@ -1015,9 +1031,22 @@ const Myappointments = () => {
       </Row>
 
       {/* ifnoappointments */}
+
       <Row
         style={{
-          display: responsefrombackend.length > 0 ? "none" : "block",
+          marginBottom: "200px",
+          display:
+            emptyappointstoggle === false && responsefrombackend.length === 0
+              ? "block"
+              : "none",
+        }}
+      ></Row>
+      <Row
+        style={{
+          display:
+            emptyappointstoggle === true && responsefrombackend.length === 0
+              ? "block"
+              : "none",
         }}
       >
         <Container>

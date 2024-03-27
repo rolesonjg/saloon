@@ -14,6 +14,7 @@ router.post('/generateotp', async (req, res) => {
     const otp = otpGenerator.generate(6, { digits: true, specialChars: false,lowerCaseAlphabets: false ,upperCaseAlphabets: false   });
     optStoragetemparay=otp;
     console.log("ACUTUAL OTP",otp)
+    
     // console.log("optStoragetemparay",optStoragetemparay)
     // const vonage = new Vonage({
     //     apiKey: "6623f9be",
