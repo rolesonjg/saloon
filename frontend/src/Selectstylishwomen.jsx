@@ -912,7 +912,10 @@ const Selectstylishwomen = () => {
                               </Col>
                             </Row>
                             <Row className="secondrowofsecondcontainer">
-                              <Col className="md-12  lg-6  d-flex ">
+                              <Col
+                                style={{ paddingRight: "0px" }}
+                                className="md-12  lg-6  d-flex "
+                              >
                                 <img
                                   src={handbagpixelated}
                                   className="columnimageofthesecondcontainer"
@@ -923,7 +926,10 @@ const Selectstylishwomen = () => {
                                   {item.experience === "1" ? "year" : "years"}
                                 </p>
                               </Col>
-                              <Col className=" md-12  lg-6 d-flex">
+                              <Col
+                                style={{ paddingRight: "0px" }}
+                                className=" md-12  lg-6 d-flex"
+                              >
                                 <img
                                   src={ratingspixelated}
                                   className="columnimageofthesecondcontainer"
